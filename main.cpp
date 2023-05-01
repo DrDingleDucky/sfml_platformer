@@ -139,6 +139,9 @@ int main() {
             }
         }
         deltaTime = clock.restart().asSeconds();
+
+        std::cout << "fps: " << 1 / deltaTime << "\n";
+
         player.update(deltaTime);
 
         window.clear(sf::Color(64, 64, 64, 255));
