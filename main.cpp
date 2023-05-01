@@ -86,7 +86,6 @@ class Player {
             if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
                 if (playerDirection.y > 0) {
                     isGounded = true;
-                    std::cout << "gounded" << "\n";
                     playerDirection.y = 0;
                     playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, tile.tileRect.getGlobalBounds().top - playerRect.getSize().y));
                 } else if (playerDirection.y < 0) {
