@@ -24,15 +24,17 @@ class Player {
     float playerJumpVelocity;
     float fallMultiplier;
     float jumpFallMultiplier;
+    float jumpBufferTimer;
 
-    bool isGounded = false;
+    bool isGounded;
+    bool jumpReady;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRect;
     std::vector<Tile> tileGroup;
 
    public:
-    Player(sf::Color playerColor, float playerSpeed, float playerGravity, float playerJumpVelocity, float fallMultiplier, float jumpFallMultiplier, sf::Vector2f playerSize, sf::Vector2f playerPos, const std::vector<Tile>& tileGroup)
-        : playerSpeed(playerSpeed), playerGravity(playerGravity), playerJumpVelocity(playerJumpVelocity), fallMultiplier(fallMultiplier), jumpFallMultiplier(jumpFallMultiplier), isGounded(false), playerDirection(0.0f, 0.0f), playerRect(playerSize), tileGroup(tileGroup) {
+    Player(sf::Color playerColor, float playerSpeed, float playerGravity, float playerJumpVelocity, float fallMultiplier, float jumpFallMultiplier, float jumpBufferTimer, sf::Vector2f playerSize, sf::Vector2f playerPos, const std::vector<Tile>& tileGroup)
+        : playerSpeed(playerSpeed), playerGravity(playerGravity), playerJumpVelocity(playerJumpVelocity), fallMultiplier(fallMultiplier), jumpFallMultiplier(jumpFallMultiplier), jumpBufferTimer(jumpBufferTimer), isGounded(false), jumpReady(jumpReady), playerDirection(0.0f, 0.0f), playerRect(playerSize), tileGroup(tileGroup) {
         playerRect.setFillColor(playerColor);
         playerRect.setPosition(playerPos);
     }
@@ -64,11 +66,22 @@ class Player {
     }
 
     void verticalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGounded) {
-            playerDirection.y = playerJumpVelocity;
-            isGounded = false;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
+            if (isGounded) {
+                playerDirection.y = playerJumpVelocity;
+                isGounded = false;
+                jumpReady = false;
+            } else if (playerDirection.y > 0 && !jumpReady) {
+                jumpReady = true;
+            }
         } else if (playerDirection.y > 0 && isGounded) {
             isGounded = false;
+        }
+
+        if (jumpReady && isGounded) {
+            playerDirection.y = playerJumpVelocity;
+            isGounded = false;
+            jumpReady = false;
         }
 
         if (playerDirection.y > 0) {
@@ -135,7 +148,7 @@ int main() {
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 48), sf::Vector2f(720, 672)));
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(288, 48), sf::Vector2f(672, 336)));
 
-    Player player(sf::Color::White, 385.0f, 2175.0f, -1000.0f, 3.0f, 5.0f, sf::Vector2f(48.0f, 96.0f), sf::Vector2f(144.0f, 48.0f), tileGroup);
+    Player player(sf::Color::White, 385.0f, 2175.0f, -1000.0f, 3.0f, 5.0f, 0.8f, sf::Vector2f(48.0f, 96.0f), sf::Vector2f(144.0f, 48.0f), tileGroup);
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
