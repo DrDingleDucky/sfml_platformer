@@ -24,9 +24,9 @@ class Player {
     float playerJumpVelocity;
     float fallMultiplier;
     float jumpFallMultiplier;
-    float jumpBufferTimer;
     float jumpBufferDelay;
 
+    float jumpBufferTimer;
     bool isGounded;
     bool jumpReady;
     sf::Vector2f playerDirection;
@@ -34,11 +34,28 @@ class Player {
     std::vector<Tile> tileGroup;
 
    public:
-    Player(sf::Color playerColor, float playerSpeed, float playerGravity, float playerJumpVelocity, float fallMultiplier, float jumpFallMultiplier, float jumpBufferTimer, sf::Vector2f playerSize, sf::Vector2f playerPos, const std::vector<Tile>& tileGroup)
-        : playerSpeed(playerSpeed), playerGravity(playerGravity), playerJumpVelocity(playerJumpVelocity), fallMultiplier(fallMultiplier), jumpFallMultiplier(jumpFallMultiplier), jumpBufferTimer(jumpBufferTimer), isGounded(false), jumpReady(jumpReady), playerDirection(0.0f, 0.0f), playerRect(playerSize), tileGroup(tileGroup) {
+    Player(sf::Color playerColor,
+           float playerSpeed,
+           float playerGravity,
+           float playerJumpVelocity,
+           float fallMultiplier,
+           float jumpFallMultiplier,
+           float jumpBufferDelay,
+           sf::Vector2f playerSize,
+           sf::Vector2f playerPosition,
+           std::vector<Tile>& tileGroup)
+        : playerSpeed(playerSpeed),
+          playerGravity(playerGravity),
+          playerJumpVelocity(playerJumpVelocity),
+          fallMultiplier(fallMultiplier),
+          jumpFallMultiplier(jumpFallMultiplier),
+          jumpBufferDelay(jumpBufferDelay),
+          playerDirection(0.0f, 0.0f),
+          playerRect(playerSize),
+          tileGroup(tileGroup) {
         playerRect.setFillColor(playerColor);
-        playerRect.setPosition(playerPos);
-        jumpBufferDelay = jumpBufferTimer;
+        playerRect.setPosition(playerPosition);
+        jumpBufferTimer = jumpBufferDelay;
     }
 
     void horizontalMovement(float deltaTime) {
@@ -59,9 +76,13 @@ class Player {
         for (auto& tile : tileGroup) {
             if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
                 if (playerDirection.x > 0) {
-                    playerRect.setPosition(sf::Vector2f(tile.tileRect.getGlobalBounds().left - playerRect.getSize().x, playerRect.getPosition().y));
+                    playerRect.setPosition(sf::Vector2f(
+                        tile.tileRect.getGlobalBounds().left - playerRect.getSize().x,
+                        playerRect.getPosition().y));
                 } else if (playerDirection.x < 0) {
-                    playerRect.setPosition(sf::Vector2f(tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x, playerRect.getPosition().y));
+                    playerRect.setPosition(
+                        sf::Vector2f(tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x,
+                                     playerRect.getPosition().y));
                 }
             }
         }
@@ -89,6 +110,7 @@ class Player {
                 isGounded = false;
                 jumpReady = false;
             }
+
             jumpBufferTimer -= deltaTime;
         }
 
@@ -109,10 +131,14 @@ class Player {
                 if (playerDirection.y > 0) {
                     isGounded = true;
                     playerDirection.y = 0;
-                    playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, tile.tileRect.getGlobalBounds().top - playerRect.getSize().y));
+                    playerRect.setPosition(sf::Vector2f(
+                        playerRect.getPosition().x,
+                        tile.tileRect.getGlobalBounds().top - playerRect.getSize().y));
                 } else if (playerDirection.y < 0) {
                     playerDirection.y = 0;
-                    playerRect.setPosition(sf::Vector2f(playerRect.getPosition().x, tile.tileRect.getGlobalBounds().top + tile.tileRect.getSize().y));
+                    playerRect.setPosition(sf::Vector2f(
+                        playerRect.getPosition().x,
+                        tile.tileRect.getGlobalBounds().top + tile.tileRect.getSize().y));
                 }
             }
         }
@@ -156,7 +182,17 @@ int main() {
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 48), sf::Vector2f(720, 672)));
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(288, 48), sf::Vector2f(672, 336)));
 
-    Player player(sf::Color::White, 385.0f, 2175.0f, -1000.0f, 3.0f, 5.0f, 0.12f, sf::Vector2f(48.0f, 96.0f), sf::Vector2f(144.0f, 48.0f), tileGroup);
+    Player player(
+        sf::Color::White,             // player colour
+        385.0f,                       // player speed
+        2175.0f,                      // player gravity
+        -1000.0f,                     // player jump velocity
+        3.0f,                         // fall multiplier
+        5.0f,                         // jump fall multiplier
+        0.15f,                        // jump buffer timer
+        sf::Vector2f(48.0f, 96.0f),   // player size
+        sf::Vector2f(144.0f, 48.0f),  // player position
+        tileGroup);
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
