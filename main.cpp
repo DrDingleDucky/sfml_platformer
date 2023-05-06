@@ -25,6 +25,7 @@ class Player {
     float fallMultiplier;
     float jumpFallMultiplier;
     float jumpBufferTimer;
+    float jumpBufferDelay;
 
     bool isGounded;
     bool jumpReady;
@@ -37,6 +38,7 @@ class Player {
         : playerSpeed(playerSpeed), playerGravity(playerGravity), playerJumpVelocity(playerJumpVelocity), fallMultiplier(fallMultiplier), jumpFallMultiplier(jumpFallMultiplier), jumpBufferTimer(jumpBufferTimer), isGounded(false), jumpReady(jumpReady), playerDirection(0.0f, 0.0f), playerRect(playerSize), tileGroup(tileGroup) {
         playerRect.setFillColor(playerColor);
         playerRect.setPosition(playerPos);
+        jumpBufferDelay = jumpBufferTimer;
     }
 
     void horizontalMovement(float deltaTime) {
@@ -71,17 +73,23 @@ class Player {
                 playerDirection.y = playerJumpVelocity;
                 isGounded = false;
                 jumpReady = false;
-            } else if (playerDirection.y > 0 && !jumpReady) {
+            } else if (!jumpReady) {
                 jumpReady = true;
             }
         } else if (playerDirection.y > 0 && isGounded) {
             isGounded = false;
         }
 
-        if (jumpReady && isGounded) {
-            playerDirection.y = playerJumpVelocity;
-            isGounded = false;
-            jumpReady = false;
+        if (jumpReady) {
+            if (jumpBufferTimer < 0) {
+                jumpReady = false;
+                jumpBufferTimer = jumpBufferDelay;
+            } else if (isGounded) {
+                playerDirection.y = playerJumpVelocity;
+                isGounded = false;
+                jumpReady = false;
+            }
+            jumpBufferTimer -= deltaTime;
         }
 
         if (playerDirection.y > 0) {
@@ -148,7 +156,7 @@ int main() {
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 48), sf::Vector2f(720, 672)));
     tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(288, 48), sf::Vector2f(672, 336)));
 
-    Player player(sf::Color::White, 385.0f, 2175.0f, -1000.0f, 3.0f, 5.0f, 0.8f, sf::Vector2f(48.0f, 96.0f), sf::Vector2f(144.0f, 48.0f), tileGroup);
+    Player player(sf::Color::White, 385.0f, 2175.0f, -1000.0f, 3.0f, 5.0f, 0.12f, sf::Vector2f(48.0f, 96.0f), sf::Vector2f(144.0f, 48.0f), tileGroup);
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
