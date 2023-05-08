@@ -4,7 +4,7 @@
 #include <vector>
 
 class Tile {
-   public:
+public:
     sf::RectangleShape tileRect;
     Tile(sf::Color tileColor, sf::Vector2f tileSize, sf::Vector2f tilePos) {
         tileRect.setFillColor(tileColor);
@@ -18,7 +18,7 @@ class Tile {
 };
 
 class Player {
-   private:
+private:
     float playerSpeed;
     float playerGravity;
     float playerJumpVelocity;
@@ -33,33 +33,35 @@ class Player {
     sf::RectangleShape playerRect;
     std::vector<Tile> tileGroup;
 
-   public:
-    Player(sf::Color playerColor,
-           float playerSpeed,
-           float playerGravity,
-           float playerJumpVelocity,
-           float fallMultiplier,
-           float jumpFallMultiplier,
-           float jumpBufferDelay,
-           sf::Vector2f playerSize,
-           sf::Vector2f playerPosition,
-           std::vector<Tile>& tileGroup)
-        : playerSpeed(playerSpeed),
-          playerGravity(playerGravity),
-          playerJumpVelocity(playerJumpVelocity),
-          fallMultiplier(fallMultiplier),
-          jumpFallMultiplier(jumpFallMultiplier),
-          jumpBufferDelay(jumpBufferDelay),
-          playerDirection(0.0f, 0.0f),
-          playerRect(playerSize),
-          tileGroup(tileGroup) {
+public:
+    Player(
+        sf::Color playerColor,
+        float playerSpeed,
+        float playerGravity,
+        float playerJumpVelocity,
+        float fallMultiplier,
+        float jumpFallMultiplier,
+        float jumpBufferDelay,
+        sf::Vector2f playerSize,
+        sf::Vector2f playerPosition,
+        std::vector<Tile>& tileGroup)
+        : playerSpeed(playerSpeed)
+        , playerGravity(playerGravity)
+        , playerJumpVelocity(playerJumpVelocity)
+        , fallMultiplier(fallMultiplier)
+        , jumpFallMultiplier(jumpFallMultiplier)
+        , jumpBufferDelay(jumpBufferDelay)
+        , playerDirection(0.0f, 0.0f)
+        , playerRect(playerSize)
+        , tileGroup(tileGroup) {
         playerRect.setFillColor(playerColor);
         playerRect.setPosition(playerPosition);
         jumpBufferTimer = jumpBufferDelay;
     }
 
     void horizontalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)
+            && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             playerDirection.x = 0;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
             playerDirection.x = -1;
@@ -80,9 +82,9 @@ class Player {
                         tile.tileRect.getGlobalBounds().left - playerRect.getSize().x,
                         playerRect.getPosition().y));
                 } else if (playerDirection.x < 0) {
-                    playerRect.setPosition(
-                        sf::Vector2f(tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x,
-                                     playerRect.getPosition().y));
+                    playerRect.setPosition(sf::Vector2f(
+                        tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x,
+                        playerRect.getPosition().y));
                 }
             }
         }
@@ -116,7 +118,8 @@ class Player {
 
         if (playerDirection.y > 0) {
             playerDirection.y += playerGravity * fallMultiplier * deltaTime;
-        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerDirection.y < 0) {
+        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)
+            && playerDirection.y < 0) {
             playerDirection.y += playerGravity * jumpFallMultiplier * deltaTime;
         } else {
             playerDirection.y += playerGravity * deltaTime;
@@ -165,7 +168,9 @@ int main() {
     int windowPositionX = sf::VideoMode::getDesktopMode().width / 2 - windowWidth / 2;
     int windowPositionY = sf::VideoMode::getDesktopMode().height / 2 - windowHeight / 2;
 
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
+        windowTitle,
+        sf::Style::Close);
     window.setPosition(sf::Vector2i(windowPositionX, windowPositionY));
     sf::Event event;
 
@@ -174,24 +179,38 @@ int main() {
 
     std::vector<Tile> tileGroup;
 
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(1008, 96), sf::Vector2f(96, 720)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 96), sf::Vector2f(336, 624)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 192), sf::Vector2f(432, 528)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 144), sf::Vector2f(528, 576)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 96), sf::Vector2f(624, 624)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(96, 48), sf::Vector2f(720, 672)));
-    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(288, 48), sf::Vector2f(672, 336)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(1008, 96),
+        sf::Vector2f(96, 720)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(96, 96),
+        sf::Vector2f(336, 624)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(96, 192),
+        sf::Vector2f(432, 528)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(96, 144),
+        sf::Vector2f(528, 576)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(96, 96),
+        sf::Vector2f(624, 624)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(96, 48),
+        sf::Vector2f(720, 672)));
+    tileGroup.push_back(Tile(sf::Color::Black,
+        sf::Vector2f(288, 48),
+        sf::Vector2f(672, 336)));
 
     Player player(
-        sf::Color::White,             // player colour
-        385.0f,                       // player speed
-        2175.0f,                      // player gravity
-        -1000.0f,                     // player jump velocity
-        3.0f,                         // fall multiplier
-        5.0f,                         // jump fall multiplier
-        0.15f,                        // jump buffer timer
-        sf::Vector2f(48.0f, 96.0f),   // player size
-        sf::Vector2f(144.0f, 48.0f),  // player position
+        sf::Color::White, // player color
+        385.0f, // player speed
+        2175.0f, // player gravity
+        -1000.0f, // player jump velocity
+        3.0f, // fall multiplier
+        5.0f, // jump fall multiplier
+        0.15f, // jump buffer timer
+        sf::Vector2f(48.0f, 96.0f), // player size
+        sf::Vector2f(144.0f, 48.0f), // player position
         tileGroup);
 
     while (window.isOpen()) {
@@ -200,6 +219,7 @@ int main() {
                 window.close();
             }
         }
+
         deltaTime = clock.restart().asSeconds();
 
         player.update(deltaTime);
