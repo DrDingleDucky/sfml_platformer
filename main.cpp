@@ -220,7 +220,7 @@ int main() {
         sf::Color::Black,
         sf::Vector2f(96, 192),
         sf::Vector2f(1648, 528)));
-    
+
     // 3
     tileGroup.push_back(Tile(
         sf::Color::Black,
@@ -234,8 +234,36 @@ int main() {
     // -1
     tileGroup.push_back(Tile(
         sf::Color::Black,
-        sf::Vector2f(96, 432),
+        sf::Vector2f(96, 144),
         sf::Vector2f(-432, 576)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 144),
+        sf::Vector2f(-912, 288)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 48),
+        sf::Vector2f(-768, 432)));
+
+    // -2
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 96),
+        sf::Vector2f(-1680, 624)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 192),
+        sf::Vector2f(-2160, 528)));
+
+    // -3
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 144),
+        sf::Vector2f(-2640, 576)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 96),
+        sf::Vector2f(-3120, 624)));
 
     Player player(
         sf::Color::White, // player color
