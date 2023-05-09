@@ -30,10 +30,11 @@ private:
     bool isGounded;
     bool jumpReady;
     sf::Vector2f playerDirection;
-    sf::RectangleShape playerRect;
     std::vector<Tile> tileGroup;
 
 public:
+    sf::RectangleShape playerRect;
+
     Player(
         sf::Color playerColor,
         float playerSpeed,
@@ -172,6 +173,7 @@ int main() {
         windowTitle,
         sf::Style::Close);
     window.setPosition(sf::Vector2i(windowPositionX, windowPositionY));
+
     sf::Event event;
 
     sf::Clock clock;
@@ -179,36 +181,70 @@ int main() {
 
     std::vector<Tile> tileGroup;
 
-    tileGroup.push_back(Tile(sf::Color::Black,
-        sf::Vector2f(1008, 96),
-        sf::Vector2f(96, 720)));
-    tileGroup.push_back(Tile(sf::Color::Black,
+    // 1
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(8400, 96),
+        sf::Vector2f(-4200, 720)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
         sf::Vector2f(96, 96),
         sf::Vector2f(336, 624)));
-    tileGroup.push_back(Tile(sf::Color::Black,
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
         sf::Vector2f(96, 192),
         sf::Vector2f(432, 528)));
-    tileGroup.push_back(Tile(sf::Color::Black,
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
         sf::Vector2f(96, 144),
         sf::Vector2f(528, 576)));
-    tileGroup.push_back(Tile(sf::Color::Black,
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
         sf::Vector2f(96, 96),
         sf::Vector2f(624, 624)));
-    tileGroup.push_back(Tile(sf::Color::Black,
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
         sf::Vector2f(96, 48),
         sf::Vector2f(720, 672)));
-    tileGroup.push_back(Tile(sf::Color::Black,
-        sf::Vector2f(288, 48),
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(192, 48),
         sf::Vector2f(672, 336)));
+
+    // 2
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(432, 48),
+        sf::Vector2f(1072, 336)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 192),
+        sf::Vector2f(1648, 528)));
+    
+    // 3
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 144),
+        sf::Vector2f(3296, 576)));
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 48),
+        sf::Vector2f(3008, 576)));
+
+    // -1
+    tileGroup.push_back(Tile(
+        sf::Color::Black,
+        sf::Vector2f(96, 432),
+        sf::Vector2f(-432, 576)));
 
     Player player(
         sf::Color::White, // player color
-        385.0f, // player speed
+        450.0f, // player speed
         2175.0f, // player gravity
         -1000.0f, // player jump velocity
         3.0f, // fall multiplier
         5.0f, // jump fall multiplier
-        0.15f, // jump buffer timer
+        0.1f, // jump buffer timer
         sf::Vector2f(48.0f, 96.0f), // player size
         sf::Vector2f(144.0f, 48.0f), // player position
         tileGroup);
@@ -221,6 +257,20 @@ int main() {
         }
 
         deltaTime = clock.restart().asSeconds();
+
+        if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
+            < window.getView().getCenter().x - window.getSize().x / 2) {
+            window.setView(sf::View(sf::FloatRect(window.getView().getCenter().x - 1800,
+                0,
+                windowWidth,
+                windowHeight)));
+        } else if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
+            > window.getView().getCenter().x + window.getSize().x / 2) {
+            window.setView(sf::View(sf::FloatRect(window.getView().getCenter().x + 1800,
+                0,
+                windowWidth,
+                windowHeight)));
+        }
 
         player.update(deltaTime);
 
