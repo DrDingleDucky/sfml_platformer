@@ -31,11 +31,9 @@ private:
     bool isGounded;
     bool jumpReady;
     sf::Vector2f playerDirection;
-    std::vector<Tile> tileGroup;
-
-public:
     sf::RectangleShape playerRect;
-
+    std::vector<Tile> tileGroup;
+public:
     Player(
         sf::Color playerColor,
         float playerSpeed,
@@ -149,22 +147,52 @@ public:
         }
     }
 
-    void update(float deltaTime) {
+    void camera(sf::RenderWindow& window) {
+        if (playerRect.getPosition().x + playerRect.getSize().x / 2.0f
+            < window.getView().getCenter().x - window.getSize().x / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
+                window.getView().getCenter().y - window.getSize().y / 2.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        } else if (playerRect.getPosition().x + playerRect.getSize().x / 2.0f
+            > window.getView().getCenter().x + window.getSize().x / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
+                window.getView().getCenter().y + window.getSize().y / 2.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        } else if (playerRect.getPosition().y + playerRect.getSize().y / 2.0f
+            < window.getView().getCenter().y - window.getSize().y / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x + window.getSize().x / 2.0f,
+                window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        } else if (playerRect.getPosition().y + playerRect.getSize().y / 2.0f
+            > window.getView().getCenter().y + window.getSize().y / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - window.getSize().x / 2.0f,
+                window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        }
+    }
+
+    void update(sf::RenderWindow& window, float deltaTime) {
         horizontalMovement(deltaTime);
         horizontalCollisions();
 
         verticalMovement(deltaTime);
         verticalCollisions();
+
+        camera(window);
     }
 
     void draw(sf::RenderWindow& window) {
         window.draw(playerRect);
     }
 };
-
-// void loadLevel() {
-
-// }
 
 int main() {
     std::string windowTitle = "Game";
@@ -238,37 +266,37 @@ int main() {
 
         deltaTime = clock.restart().asSeconds();
 
-        if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-            < window.getView().getCenter().x - window.getSize().x / 2.0f) {
-            window.setView(sf::View(sf::FloatRect(
-                window.getView().getCenter().x - 1800.0f,
-                window.getView().getCenter().y - window.getSize().y / 2.0f,
-                windowWidth,
-                windowHeight)));
-        } else if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-            > window.getView().getCenter().x + window.getSize().x / 2.0f) {
-            window.setView(sf::View(sf::FloatRect(
-                window.getView().getCenter().x + 1800.0f,
-                window.getView().getCenter().y + window.getSize().y / 2.0f,
-                windowWidth,
-                windowHeight)));
-        } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
-            < window.getView().getCenter().y - window.getSize().y / 2.0f) {
-            window.setView(sf::View(sf::FloatRect(
-                window.getView().getCenter().x + window.getSize().x / 2.0f,
-                window.getView().getCenter().y - 1224.0f,
-                windowWidth,
-                windowHeight)));
-        } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
-            > window.getView().getCenter().y + window.getSize().y / 2.0f) {
-            window.setView(sf::View(sf::FloatRect(
-                window.getView().getCenter().x - window.getSize().x / 2.0f,
-                window.getView().getCenter().y + 1224.0f,
-                windowWidth,
-                windowHeight)));
-        }
+        // if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
+        //     < window.getView().getCenter().x - window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f,
+        //         windowWidth,
+        //         windowHeight)));
+        // } else if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
+        //     > window.getView().getCenter().x + window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f,
+        //         windowWidth,
+        //         windowHeight)));
+        // } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
+        //     < window.getView().getCenter().y - window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
+        //         windowWidth,
+        //         windowHeight)));
+        // } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
+        //     > window.getView().getCenter().y + window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
+        //         windowWidth,
+        //         windowHeight)));
+        // }
 
-        player.update(deltaTime);
+        player.update(window, deltaTime);
 
         window.clear(sf::Color(64, 64, 64, 255));
 
