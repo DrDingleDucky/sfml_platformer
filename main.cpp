@@ -266,36 +266,6 @@ int main() {
 
         deltaTime = clock.restart().asSeconds();
 
-        // if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-        //     < window.getView().getCenter().x - window.getSize().x / 2.0f) {
-        //     window.setView(sf::View(sf::FloatRect(
-        //         window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
-        //         window.getView().getCenter().y - window.getSize().y / 2.0f,
-        //         windowWidth,
-        //         windowHeight)));
-        // } else if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-        //     > window.getView().getCenter().x + window.getSize().x / 2.0f) {
-        //     window.setView(sf::View(sf::FloatRect(
-        //         window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
-        //         window.getView().getCenter().y + window.getSize().y / 2.0f,
-        //         windowWidth,
-        //         windowHeight)));
-        // } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
-        //     < window.getView().getCenter().y - window.getSize().y / 2.0f) {
-        //     window.setView(sf::View(sf::FloatRect(
-        //         window.getView().getCenter().x + window.getSize().x / 2.0f,
-        //         window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
-        //         windowWidth,
-        //         windowHeight)));
-        // } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
-        //     > window.getView().getCenter().y + window.getSize().y / 2.0f) {
-        //     window.setView(sf::View(sf::FloatRect(
-        //         window.getView().getCenter().x - window.getSize().x / 2.0f,
-        //         window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
-        //         windowWidth,
-        //         windowHeight)));
-        // }
-
         player.update(window, deltaTime);
 
         window.clear(sf::Color(64, 64, 64, 255));
