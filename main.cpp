@@ -213,6 +213,8 @@ int main() {
             }
             row_index++;
         }
+    } else {
+        std::cout << "error: can't open file" << "\n";
     }
 
     Player player(
