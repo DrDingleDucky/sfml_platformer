@@ -1,4 +1,5 @@
 #include <SFML/Graphics.hpp>
+#include <fstream>
 #include <iostream>
 #include <string>
 #include <vector>
@@ -161,6 +162,10 @@ public:
     }
 };
 
+// void loadLevel() {
+
+// }
+
 int main() {
     std::string windowTitle = "Game";
     int windowWidth = 1200;
@@ -181,89 +186,34 @@ int main() {
 
     std::vector<Tile> tileGroup;
 
-    // 1
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(8400, 96),
-        sf::Vector2f(-4200, 720)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 96),
-        sf::Vector2f(336, 624)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 192),
-        sf::Vector2f(432, 528)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 144),
-        sf::Vector2f(528, 576)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 96),
-        sf::Vector2f(624, 624)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 48),
-        sf::Vector2f(720, 672)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(192, 48),
-        sf::Vector2f(672, 336)));
+    std::ifstream file("map.txt");
+    std::string line;
 
-    // 2
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(432, 48),
-        sf::Vector2f(1072, 336)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 192),
-        sf::Vector2f(1648, 528)));
+    float x;
+    float y;
 
-    // 3
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 144),
-        sf::Vector2f(3296, 576)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 48),
-        sf::Vector2f(3008, 576)));
+    float playerPosX;
+    float playerPosY;
 
-    // -1
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 144),
-        sf::Vector2f(-432, 576)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 144),
-        sf::Vector2f(-912, 288)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 48),
-        sf::Vector2f(-768, 432)));
-
-    // -2
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 96),
-        sf::Vector2f(-1680, 624)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 192),
-        sf::Vector2f(-2160, 528)));
-
-    // -3
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 144),
-        sf::Vector2f(-2640, 576)));
-    tileGroup.push_back(Tile(
-        sf::Color::Black,
-        sf::Vector2f(96, 96),
-        sf::Vector2f(-3120, 624)));
+    if (file.is_open()) {
+        float row_index = 0;
+        while (std::getline(file, line)) {
+            for (float collom_index = 0; collom_index < line.length(); collom_index++) {
+                x = collom_index * 48.0f;
+                y = row_index * 48.0f;
+                if (line[collom_index] == '1') {
+                    tileGroup.push_back(Tile(
+                        sf::Color::Black,
+                        sf::Vector2f(48.0f, 48.0f),
+                        sf::Vector2f(x, y)));
+                } else if (line[collom_index] == '2') {
+                    playerPosX = x;
+                    playerPosY = y;
+                }
+            }
+            row_index++;
+        }
+    }
 
     Player player(
         sf::Color::White, // player color
@@ -274,7 +224,7 @@ int main() {
         5.0f, // jump fall multiplier
         0.1f, // jump buffer timer
         sf::Vector2f(48.0f, 96.0f), // player size
-        sf::Vector2f(144.0f, 48.0f), // player position
+        sf::Vector2f(playerPosX, playerPosY), // player position
         tileGroup);
 
     while (window.isOpen()) {
@@ -287,15 +237,31 @@ int main() {
         deltaTime = clock.restart().asSeconds();
 
         if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-            < window.getView().getCenter().x - window.getSize().x / 2) {
-            window.setView(sf::View(sf::FloatRect(window.getView().getCenter().x - 1800,
-                0,
+            < window.getView().getCenter().x - window.getSize().x / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - 1800.0f,
+                window.getView().getCenter().y - window.getSize().y / 2.0f,
                 windowWidth,
                 windowHeight)));
         } else if (player.playerRect.getPosition().x + player.playerRect.getSize().x / 2.0f
-            > window.getView().getCenter().x + window.getSize().x / 2) {
-            window.setView(sf::View(sf::FloatRect(window.getView().getCenter().x + 1800,
-                0,
+            > window.getView().getCenter().x + window.getSize().x / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x + 1800.0f,
+                window.getView().getCenter().y + window.getSize().y / 2.0f,
+                windowWidth,
+                windowHeight)));
+        } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
+            < window.getView().getCenter().y - window.getSize().y / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x + window.getSize().x / 2.0f,
+                window.getView().getCenter().y - 1224.0f,
+                windowWidth,
+                windowHeight)));
+        } else if (player.playerRect.getPosition().y + player.playerRect.getSize().y / 2.0f
+            > window.getView().getCenter().y + window.getSize().y / 2.0f) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - window.getSize().x / 2.0f,
+                window.getView().getCenter().y + 1224.0f,
                 windowWidth,
                 windowHeight)));
         }
