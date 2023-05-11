@@ -221,8 +221,9 @@ void loadLevel(float& playerPositionX, float& playerPositionY, std::vector<Tile>
             row_index++;
         }
     } else {
-        std::cout << "error: can't open file"
+        std::cout << "error: can't open 'map.txt'"
                   << "\n";
+        exit(0);
     }
 }
 
