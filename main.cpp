@@ -195,7 +195,7 @@ public:
     }
 };
 
-void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile>& tileGroup) {
+void loadLevel(float& playerPositionX, float& playerPositionY, std::vector<Tile>& tileGroup) {
     std::ifstream file("map.txt");
     std::string line;
 
