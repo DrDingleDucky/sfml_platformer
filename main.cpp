@@ -253,37 +253,6 @@ int main() {
 
     std::cout << playerPosX << " " << playerPosY << "\n";
 
-    // std::ifstream file("map.txt");
-    // std::string line;
-
-    // float x;
-    // float y;
-
-    // float playerPosX;
-    // float playerPosY;
-
-    // if (file.is_open()) {
-    //     float row_index = 0;
-    //     while (std::getline(file, line)) {
-    //         for (float collom_index = 0; collom_index < line.length(); collom_index++) {
-    //             x = collom_index * 48.0f;
-    //             y = row_index * 48.0f;
-    //             if (line[collom_index] == '1') {
-    //                 tileGroup.push_back(Tile(
-    //                     sf::Color::Black,
-    //                     sf::Vector2f(48.0f, 48.0f),
-    //                     sf::Vector2f(x, y)));
-    //             } else if (line[collom_index] == '2') {
-    //                 playerPosX = x;
-    //                 playerPosY = y;
-    //             }
-    //         }
-    //         row_index++;
-    //     }
-    // } else {
-    //     std::cout << "error: can't open file" << "\n";
-    // }
-
     Player player(
         sf::Color::White, // player color
         450.0f, // player speed
