@@ -33,10 +33,15 @@ private:
     std::vector<Tile> tileGroup;
 
 public:
-    Player(sf::Color playerColor, float playerSpeed, float playerGravity,
-           float playerJumpVelocity, float fallMultiplier,
-           float jumpFallMultiplier, float jumpBufferDelay,
-           sf::Vector2f playerSize, sf::Vector2f playerPosition,
+    Player(sf::Color playerColor,
+           float playerSpeed,
+           float playerGravity,
+           float playerJumpVelocity,
+           float fallMultiplier,
+           float jumpFallMultiplier,
+           float jumpBufferDelay,
+           sf::Vector2f playerSize,
+           sf::Vector2f playerPosition,
            std::vector<Tile> &tileGroup)
         : playerSpeed(playerSpeed),
           playerGravity(playerGravity),
