@@ -28,7 +28,7 @@ private:
     float jumpBufferDelay;
 
     float jumpBufferTimer;
-    bool isGounded;
+    bool isGrounded;
     bool jumpReady;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRect;
@@ -93,24 +93,24 @@ public:
 
     void verticalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            if (isGounded) {
+            if (isGrounded) {
                 playerDirection.y = playerJumpVelocity;
-                isGounded = false;
+                isGrounded = false;
                 jumpReady = false;
             } else if (!jumpReady) {
                 jumpReady = true;
             }
-        } else if (playerDirection.y > 0 && isGounded) {
-            isGounded = false;
+        } else if (playerDirection.y > 0 && isGrounded) {
+            isGrounded = false;
         }
 
         if (jumpReady) {
             if (jumpBufferTimer < 0) {
                 jumpReady = false;
                 jumpBufferTimer = jumpBufferDelay;
-            } else if (isGounded) {
+            } else if (isGrounded) {
                 playerDirection.y = playerJumpVelocity;
-                isGounded = false;
+                isGrounded = false;
                 jumpReady = false;
             }
 
@@ -133,7 +133,7 @@ public:
         for (auto& tile : tileGroup) {
             if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
                 if (playerDirection.y > 0) {
-                    isGounded = true;
+                    isGrounded = true;
                     playerDirection.y = 0;
                     playerRect.setPosition(sf::Vector2f(
                         playerRect.getPosition().x,
