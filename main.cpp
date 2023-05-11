@@ -195,7 +195,7 @@ public:
     }
 };
 
-void loadLevel(float &PlayerPosX, float &playerPosY, std::vector<Tile>& tileGroup) {
+void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile>& tileGroup) {
     std::ifstream file("map.txt");
     std::string line;
 
@@ -214,8 +214,8 @@ void loadLevel(float &PlayerPosX, float &playerPosY, std::vector<Tile>& tileGrou
                         sf::Vector2f(48.0f, 48.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '2') {
-                    PlayerPosX = x;
-                    playerPosY = y;
+                    playerPositionX = x;
+                    playerPositionY = y;
                 }
             }
             row_index++;
@@ -246,12 +246,10 @@ int main() {
 
     std::vector<Tile> tileGroup;
 
-    float playerPosX;
-    float playerPosY;
+    float playerPositionX;
+    float playerPositionY;
 
-    loadLevel(playerPosX, playerPosY, tileGroup);
-
-    std::cout << playerPosX << " " << playerPosY << "\n";
+    loadLevel(playerPositionX, playerPositionY, tileGroup);
 
     Player player(
         sf::Color::White, // player color
@@ -262,7 +260,7 @@ int main() {
         5.0f, // jump fall multiplier
         0.1f, // jump buffer timer
         sf::Vector2f(48.0f, 96.0f), // player size
-        sf::Vector2f(playerPosX, playerPosY), // player position
+        sf::Vector2f(playerPositionX, playerPositionY), // player position
         tileGroup);
 
     while (window.isOpen()) {
