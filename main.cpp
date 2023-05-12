@@ -59,7 +59,8 @@ public:
     }
 
     void horizontalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
+            sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             if (playerDirection.x > 0.0f) {
                 playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
             } else if (playerDirection.x < 0.0f) {
@@ -88,8 +89,7 @@ public:
 
     void horizontalCollisions() {
         for (auto &tile : tileGroup) {
-            if (playerRect.getGlobalBounds().intersects(
-                    tile.tileRect.getGlobalBounds())) {
+            if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
                 if (playerDirection.x > 0.0f) {
                     playerDirection.x = 0.0f;
                     playerRect.setPosition(sf::Vector2f(
@@ -109,7 +109,7 @@ public:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGrounded) {
             playerDirection.y = playerJumpVelocity;
             isGrounded = false;
-        } else if (playerDirection.y > 0 && isGrounded) {
+        } else if (playerDirection.y > 0.0f && isGrounded) {
             isGrounded = false;
         }
 
@@ -126,8 +126,7 @@ public:
 
     void verticalCollisions() {
         for (auto &tile : tileGroup) {
-            if (playerRect.getGlobalBounds().intersects(
-                    tile.tileRect.getGlobalBounds())) {
+            if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f) {
                     isGrounded = true;
                     playerDirection.y = 0.0f;
@@ -222,10 +221,14 @@ int main() {
     int windowWidth = 1200;
     int windowHeight = 816;
 
-    int windowPositionX = sf::VideoMode::getDesktopMode().width / 2 - windowWidth / 2;
-    int windowPositionY = sf::VideoMode::getDesktopMode().height / 2 - windowHeight / 2;
+    int windowPositionX = sf::VideoMode::getDesktopMode().width / 2 -
+                          windowWidth / 2;
+    int windowPositionY = sf::VideoMode::getDesktopMode().height / 2 -
+                          windowHeight / 2;
 
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight),
+                            windowTitle,
+                            sf::Style::Close);
     window.setPosition(sf::Vector2i(windowPositionX, windowPositionY));
 
     sf::Event event;
