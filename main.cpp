@@ -7,81 +7,96 @@
 class Tile {
 public:
     sf::RectangleShape tileRect;
-    Tile(sf::Color tileColor, sf::Vector2f tileSize, sf::Vector2f tilePos) {
+    Tile(sf::Color tileColor,
+         sf::Vector2f tileSize,
+         sf::Vector2f tilePos) {
         tileRect.setFillColor(tileColor);
         tileRect.setSize(tileSize);
         tileRect.setPosition(tilePos);
     }
 
-    void draw(sf::RenderWindow &window) { window.draw(tileRect); }
+    void draw(sf::RenderWindow &window) {
+        window.draw(tileRect);
+    }
 };
 
 class Player {
 private:
-    float playerSpeed;
+    float playerAcceleration;
+    float playerMaxSpeed;
     float playerGravity;
     float playerJumpVelocity;
     float fallMultiplier;
     float jumpFallMultiplier;
-    float jumpBufferDelay;
 
-    float jumpBufferTimer;
     bool isGrounded;
-    bool jumpReady;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRect;
     std::vector<Tile> tileGroup;
 
 public:
     Player(sf::Color playerColor,
-           float playerSpeed,
+           float playerAcceleration,
+           float playerMaxSpeed,
            float playerGravity,
            float playerJumpVelocity,
            float fallMultiplier,
            float jumpFallMultiplier,
-           float jumpBufferDelay,
            sf::Vector2f playerSize,
            sf::Vector2f playerPosition,
            std::vector<Tile> &tileGroup)
-        : playerSpeed(playerSpeed),
+        : playerAcceleration(playerAcceleration),
+          playerMaxSpeed(playerMaxSpeed),
           playerGravity(playerGravity),
           playerJumpVelocity(playerJumpVelocity),
           fallMultiplier(fallMultiplier),
           jumpFallMultiplier(jumpFallMultiplier),
-          jumpBufferDelay(jumpBufferDelay),
           playerDirection(0.0f, 0.0f),
           playerRect(playerSize),
           tileGroup(tileGroup) {
         playerRect.setFillColor(playerColor);
         playerRect.setPosition(playerPosition);
-        jumpBufferTimer = jumpBufferDelay;
     }
 
     void horizontalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
-            sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            playerDirection.x = 0;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) && sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
+            if (playerDirection.x > 0.0f) {
+                playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
+            } else if (playerDirection.x < 0.0f) {
+                playerDirection.x += playerAcceleration * deltaTime;
+            }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            playerDirection.x = -1;
+            playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            playerDirection.x = 1;
+            playerDirection.x += playerAcceleration * deltaTime;
         } else {
-            playerDirection.x = 0;
+            if (playerDirection.x > 0.0f) {
+                playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
+            } else if (playerDirection.x < 0.0f) {
+                playerDirection.x += playerAcceleration * deltaTime;
+            }
         }
 
-        playerRect.move(
-            sf::Vector2f(playerDirection.x * deltaTime * playerSpeed, 0.0f));
+        if (playerDirection.x > playerMaxSpeed) {
+            playerDirection.x = playerMaxSpeed;
+        } else if (playerDirection.x < -1.0f * playerMaxSpeed) {
+            playerDirection.x = -1.0f * playerMaxSpeed;
+        }
+
+        playerRect.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
     }
 
     void horizontalCollisions() {
         for (auto &tile : tileGroup) {
             if (playerRect.getGlobalBounds().intersects(
                     tile.tileRect.getGlobalBounds())) {
-                if (playerDirection.x > 0) {
+                if (playerDirection.x > 0.0f) {
+                    playerDirection.x = 0.0f;
                     playerRect.setPosition(sf::Vector2f(
                         tile.tileRect.getGlobalBounds().left - playerRect.getSize().x,
                         playerRect.getPosition().y));
-                } else if (playerDirection.x < 0) {
+                } else if (playerDirection.x < 0.0f) {
+                    playerDirection.x = 0.0f;
                     playerRect.setPosition(sf::Vector2f(
                         tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x,
                         playerRect.getPosition().y));
@@ -91,35 +106,16 @@ public:
     }
 
     void verticalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            if (isGrounded) {
-                playerDirection.y = playerJumpVelocity;
-                isGrounded = false;
-                jumpReady = false;
-            } else if (!jumpReady) {
-                jumpReady = true;
-            }
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGrounded) {
+            playerDirection.y = playerJumpVelocity;
+            isGrounded = false;
         } else if (playerDirection.y > 0 && isGrounded) {
             isGrounded = false;
         }
 
-        if (jumpReady) {
-            if (jumpBufferTimer < 0) {
-                jumpReady = false;
-                jumpBufferTimer = jumpBufferDelay;
-            } else if (isGrounded) {
-                playerDirection.y = playerJumpVelocity;
-                isGrounded = false;
-                jumpReady = false;
-            }
-
-            jumpBufferTimer -= deltaTime;
-        }
-
-        if (playerDirection.y > 0) {
+        if (playerDirection.y > 0.0f) {
             playerDirection.y += playerGravity * fallMultiplier * deltaTime;
-        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) &&
-                   playerDirection.y < 0) {
+        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerDirection.y < 0.0f) {
             playerDirection.y += playerGravity * jumpFallMultiplier * deltaTime;
         } else {
             playerDirection.y += playerGravity * deltaTime;
@@ -132,14 +128,14 @@ public:
         for (auto &tile : tileGroup) {
             if (playerRect.getGlobalBounds().intersects(
                     tile.tileRect.getGlobalBounds())) {
-                if (playerDirection.y > 0) {
+                if (playerDirection.y > 0.0f) {
                     isGrounded = true;
-                    playerDirection.y = 0;
+                    playerDirection.y = 0.0f;
                     playerRect.setPosition(sf::Vector2f(
                         playerRect.getPosition().x,
                         tile.tileRect.getGlobalBounds().top - playerRect.getSize().y));
-                } else if (playerDirection.y < 0) {
-                    playerDirection.y = 0;
+                } else if (playerDirection.y < 0.0f) {
+                    playerDirection.y = 0.0f;
                     playerRect.setPosition(sf::Vector2f(
                         playerRect.getPosition().x,
                         tile.tileRect.getGlobalBounds().top + tile.tileRect.getSize().y));
@@ -189,8 +185,7 @@ public:
     void draw(sf::RenderWindow &window) { window.draw(playerRect); }
 };
 
-void loadLevel(float &playerPositionX, float &playerPositionY,
-               std::vector<Tile> &tileGroup) {
+void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile> &tileGroup) {
     std::ifstream file("map.txt");
     std::string line;
 
@@ -198,15 +193,17 @@ void loadLevel(float &playerPositionX, float &playerPositionY,
     float y;
 
     if (file.is_open()) {
-        float row_index = 0;
+        float row_index = 0.0f;
         while (std::getline(file, line)) {
-            for (float collom_index = 0; collom_index < line.length();
+            for (float collom_index = 0.0f; collom_index < line.length();
                  collom_index++) {
                 x = collom_index * 48.0f;
                 y = row_index * 48.0f;
                 if (line[collom_index] == '1') {
-                    tileGroup.push_back(Tile(sf::Color::Black, sf::Vector2f(48.0f, 48.0f),
-                                             sf::Vector2f(x, y)));
+                    tileGroup.push_back(Tile(
+                        sf::Color::Black,
+                        sf::Vector2f(48.0f, 48.0f),
+                        sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '2') {
                     playerPositionX = x;
                     playerPositionY = y;
@@ -215,8 +212,7 @@ void loadLevel(float &playerPositionX, float &playerPositionY,
             row_index++;
         }
     } else {
-        std::cout << "error: can't open 'map.txt'"
-                  << "\n";
+        std::cout << "error: can't open 'map.txt'\n";
         exit(0);
     }
 }
@@ -226,13 +222,10 @@ int main() {
     int windowWidth = 1200;
     int windowHeight = 816;
 
-    int windowPositionX =
-        sf::VideoMode::getDesktopMode().width / 2 - windowWidth / 2;
-    int windowPositionY =
-        sf::VideoMode::getDesktopMode().height / 2 - windowHeight / 2;
+    int windowPositionX = sf::VideoMode::getDesktopMode().width / 2 - windowWidth / 2;
+    int windowPositionY = sf::VideoMode::getDesktopMode().height / 2 - windowHeight / 2;
 
-    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), windowTitle,
-                            sf::Style::Close);
+    sf::RenderWindow window(sf::VideoMode(windowWidth, windowHeight), windowTitle, sf::Style::Close);
     window.setPosition(sf::Vector2i(windowPositionX, windowPositionY));
 
     sf::Event event;
@@ -249,12 +242,12 @@ int main() {
 
     Player player(
         sf::Color::White,                               // player color
-        450.0f,                                         // player speed
+        8675.0f,                                        // player acceleration
+        450.0f,                                         // player max speed
         2175.0f,                                        // player gravity
-        -1000.0f,                                       // player jump velocity
+        -975.0f,                                        // player jump velocity
         3.0f,                                           // fall multiplier
         5.0f,                                           // jump fall multiplier
-        0.1f,                                           // jump buffer timer
         sf::Vector2f(48.0f, 96.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player position
         tileGroup);
