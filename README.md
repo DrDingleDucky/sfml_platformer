@@ -8,7 +8,7 @@ add apex modifiers
 
 add jumb buffer
 
-add cayto time
+add coyote time
 
 add max fall speed
 
