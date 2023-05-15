@@ -194,16 +194,15 @@ void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile>
     if (file.is_open()) {
         float row_index = 0.0f;
         while (std::getline(file, line)) {
-            for (float collom_index = 0.0f; collom_index < line.length();
-                 collom_index++) {
-                x = collom_index * 48.0f;
-                y = row_index * 48.0f;
-                if (line[collom_index] == '1') {
+            for (float collom_index = 0.0f; collom_index < line.length(); collom_index++) {
+                x = collom_index * 36.0f;
+                y = row_index * 36.0f;
+                if (line[collom_index] == 't') { // t - tile
                     tileGroup.push_back(Tile(
                         sf::Color::Black,
-                        sf::Vector2f(48.0f, 48.0f),
+                        sf::Vector2f(36.0f, 36.0f),
                         sf::Vector2f(x, y)));
-                } else if (line[collom_index] == '2') {
+                } else if (line[collom_index] == 'p') { // p - player
                     playerPositionX = x;
                     playerPositionY = y;
                 }
@@ -212,14 +211,14 @@ void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile>
         }
     } else {
         std::cout << "error: can't open 'map.txt'\n";
-        exit(0);
+        exit(1);
     }
 }
 
 int main() {
     std::string windowTitle = "Game";
-    int windowWidth = 1200;
-    int windowHeight = 816;
+    int windowWidth = 1260;
+    int windowHeight = 900;
 
     int windowPositionX = sf::VideoMode::getDesktopMode().width / 2 -
                           windowWidth / 2;
@@ -245,13 +244,13 @@ int main() {
 
     Player player(
         sf::Color::White,                               // player color
-        8675.0f,                                        // player acceleration
-        450.0f,                                         // player max speed
+        7675.0f,                                        // player acceleration
+        405.0f,                                         // player max speed
         2175.0f,                                        // player gravity
-        -975.0f,                                        // player jump velocity
+        -850.0f,                                        // player jump velocity
         3.0f,                                           // fall multiplier
         5.0f,                                           // jump fall multiplier
-        sf::Vector2f(48.0f, 96.0f),                     // player size
+        sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player position
         tileGroup);
 
