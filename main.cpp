@@ -231,7 +231,7 @@ void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile>
 }
 
 int main() {
-    std::string windowTitle = "Game";
+    std::string windowTitle = "2d platformer";
     int windowWidth = 1260;
     int windowHeight = 900;
 
