@@ -6,73 +6,70 @@
 
 class Tile {
 public:
-    sf::RectangleShape tileRect;
-    Tile(sf::Color tileColor,
-         sf::Vector2f tileSize,
-         sf::Vector2f tilePos) {
-        tileRect.setFillColor(tileColor);
-        tileRect.setSize(tileSize);
-        tileRect.setPosition(tilePos);
+    sf::RectangleShape tileRectangle;
+    Tile(sf::Color color,
+         sf::Vector2f size,
+         sf::Vector2f position)
+        : tileColor(color),
+          tileSize(size),
+          tileStartPosition(position) {
+        tileRectangle.setFillColor(tileColor);
+        tileRectangle.setSize(tileSize);
+        tileRectangle.setPosition(tileStartPosition);
     }
 
     void draw(sf::RenderWindow &window) {
-        window.draw(tileRect);
+        window.draw(tileRectangle);
     }
+
+private:
+    sf::Color tileColor;
+    sf::Vector2f tileSize;
+    sf::Vector2f tileStartPosition;
 };
 
 class Player {
-private:
-    float playerAcceleration;
-    float playerMaxSpeed;
-    float playerGravity;
-    float playerJumpVelocity;
-    float fallMultiplier;
-    float jumpFallMultiplier;
-
-    bool isGrounded;
-    sf::Vector2f playerDirection;
-    sf::RectangleShape playerRect;
-    std::vector<Tile> tileGroup;
-
 public:
-    Player(sf::Color playerColor,
-           float playerAcceleration,
-           float playerMaxSpeed,
-           float playerGravity,
-           float playerJumpVelocity,
+    Player(sf::Color color,
+           float acceleration,
+           float maxSpeed,
+           float gravity,
+           float jumpVelocity,
            float fallMultiplier,
            float jumpFallMultiplier,
-           sf::Vector2f playerSize,
-           sf::Vector2f playerPosition,
+           sf::Vector2f size,
+           sf::Vector2f position,
            std::vector<Tile> &tileGroup)
-        : playerAcceleration(playerAcceleration),
-          playerMaxSpeed(playerMaxSpeed),
-          playerGravity(playerGravity),
-          playerJumpVelocity(playerJumpVelocity),
-          fallMultiplier(fallMultiplier),
-          jumpFallMultiplier(jumpFallMultiplier),
-          playerDirection(0.0f, 0.0f),
-          playerRect(playerSize),
-          tileGroup(tileGroup) {
-        playerRect.setFillColor(playerColor);
-        playerRect.setPosition(playerPosition);
+        : playerColor(color),
+          playerAcceleration(acceleration),
+          playerMaxSpeed(maxSpeed),
+          playerGravity(gravity),
+          playerJumpVelocity(jumpVelocity),
+          playerFallMultiplier(fallMultiplier),
+          playerJumpFallMultiplier(jumpFallMultiplier),
+          playerSize(size),
+          playerStartPosition(position),
+          playerTileGroup(tileGroup) {
+        playerRectangle.setFillColor(playerColor);
+        playerRectangle.setSize(playerSize);
+        playerRectangle.setPosition(playerStartPosition);
     }
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
             sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             if (playerDirection.x > 0.0f) {
-                playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
+                playerDirection.x -= playerAcceleration * deltaTime;
             } else if (playerDirection.x < 0.0f) {
                 playerDirection.x += playerAcceleration * deltaTime;
             }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
+            playerDirection.x -= playerAcceleration * deltaTime;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
             playerDirection.x += playerAcceleration * deltaTime;
         } else {
             if (playerDirection.x > 0.0f) {
-                playerDirection.x -= 1.0f * playerAcceleration * deltaTime;
+                playerDirection.x -= playerAcceleration * deltaTime;
             } else if (playerDirection.x < 0.0f) {
                 playerDirection.x += playerAcceleration * deltaTime;
             }
@@ -80,89 +77,89 @@ public:
 
         if (playerDirection.x > playerMaxSpeed) {
             playerDirection.x = playerMaxSpeed;
-        } else if (playerDirection.x < -1.0f * playerMaxSpeed) {
-            playerDirection.x = -1.0f * playerMaxSpeed;
+        } else if (playerDirection.x < -playerMaxSpeed) {
+            playerDirection.x = -playerMaxSpeed;
         }
 
-        playerRect.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
+        playerRectangle.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
     }
 
     void horizontalCollisions() {
-        for (auto &tile : tileGroup) {
-            if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
+        for (auto &tile : playerTileGroup) {
+            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.x > 0.0f) {
                     playerDirection.x = 0.0f;
-                    playerRect.setPosition(sf::Vector2f(
-                        tile.tileRect.getGlobalBounds().left - playerRect.getSize().x,
-                        playerRect.getPosition().y));
+                    playerRectangle.setPosition(sf::Vector2f(
+                        tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
+                        playerRectangle.getPosition().y));
                 } else if (playerDirection.x < 0.0f) {
                     playerDirection.x = 0.0f;
-                    playerRect.setPosition(sf::Vector2f(
-                        tile.tileRect.getGlobalBounds().left + tile.tileRect.getSize().x,
-                        playerRect.getPosition().y));
+                    playerRectangle.setPosition(sf::Vector2f(
+                        tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
+                        playerRectangle.getPosition().y));
                 }
             }
         }
     }
 
     void verticalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && isGrounded) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerIsGrounded) {
             playerDirection.y = playerJumpVelocity;
-            isGrounded = false;
-        } else if (playerDirection.y > 0.0f && isGrounded) {
-            isGrounded = false;
+            playerIsGrounded = false;
+        } else if (playerDirection.y > 0.0f && playerIsGrounded) {
+            playerIsGrounded = false;
         }
 
         if (playerDirection.y > 0.0f) {
-            playerDirection.y += playerGravity * fallMultiplier * deltaTime;
+            playerDirection.y += playerGravity * playerFallMultiplier * deltaTime;
         } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerDirection.y < 0.0f) {
-            playerDirection.y += playerGravity * jumpFallMultiplier * deltaTime;
+            playerDirection.y += playerGravity * playerJumpFallMultiplier * deltaTime;
         } else {
             playerDirection.y += playerGravity * deltaTime;
         }
 
-        playerRect.move(sf::Vector2f(0, playerDirection.y * deltaTime));
+        playerRectangle.move(sf::Vector2f(0, playerDirection.y * deltaTime));
     }
 
     void verticalCollisions() {
-        for (auto &tile : tileGroup) {
-            if (playerRect.getGlobalBounds().intersects(tile.tileRect.getGlobalBounds())) {
+        for (auto &tile : playerTileGroup) {
+            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f) {
-                    isGrounded = true;
+                    playerIsGrounded = true;
                     playerDirection.y = 0.0f;
-                    playerRect.setPosition(sf::Vector2f(
-                        playerRect.getPosition().x,
-                        tile.tileRect.getGlobalBounds().top - playerRect.getSize().y));
+                    playerRectangle.setPosition(sf::Vector2f(
+                        playerRectangle.getPosition().x,
+                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
                 } else if (playerDirection.y < 0.0f) {
                     playerDirection.y = 0.0f;
-                    playerRect.setPosition(sf::Vector2f(
-                        playerRect.getPosition().x,
-                        tile.tileRect.getGlobalBounds().top + tile.tileRect.getSize().y));
+                    playerRectangle.setPosition(sf::Vector2f(
+                        playerRectangle.getPosition().x,
+                        tile.tileRectangle.getGlobalBounds().top + tile.tileRectangle.getSize().y));
                 }
             }
         }
     }
 
     void camera(sf::RenderWindow &window) {
-        if (playerRect.getPosition().x + playerRect.getSize().x / 2.0f <
+        if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f <
             window.getView().getCenter().x - window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x, window.getSize().y)));
-        } else if (playerRect.getPosition().x + playerRect.getSize().x / 2.0f >
+        } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
                    window.getView().getCenter().x + window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y + window.getSize().y / 2.0f,
                 window.getSize().x, window.getSize().y)));
-        } else if (playerRect.getPosition().y + playerRect.getSize().y / 2.0f <
+        } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
                    window.getView().getCenter().y - window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
                 window.getSize().x, window.getSize().y)));
-        } else if (playerRect.getPosition().y + playerRect.getSize().y / 2.0f >
+        } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
                    window.getView().getCenter().y + window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
@@ -181,7 +178,25 @@ public:
         camera(window);
     }
 
-    void draw(sf::RenderWindow &window) { window.draw(playerRect); }
+    void draw(sf::RenderWindow &window) {
+        window.draw(playerRectangle);
+    }
+
+private:
+    sf::Color playerColor;
+    float playerAcceleration;
+    float playerMaxSpeed;
+    float playerGravity;
+    float playerJumpVelocity;
+    float playerFallMultiplier;
+    float playerJumpFallMultiplier;
+    sf::Vector2f playerSize;
+    sf::Vector2f playerStartPosition;
+    std::vector<Tile> playerTileGroup;
+
+    bool playerIsGrounded;
+    sf::RectangleShape playerRectangle;
+    sf::Vector2f playerDirection;
 };
 
 void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile> &tileGroup) {
@@ -244,7 +259,7 @@ int main() {
 
     Player player(
         sf::Color::White,                               // player color
-        7675.0f,                                        // player acceleration
+        7675.0f,                                        // player playerAcceleration
         405.0f,                                         // player max speed
         2175.0f,                                        // player gravity
         -850.0f,                                        // player jump velocity

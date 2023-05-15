@@ -12,8 +12,8 @@ add coyote time
 
 add max fall speed
 
-add wall jump (maybe)
+add wall jump
 
-add wall climb (maybe)
+add wall climb
 
 add juice
