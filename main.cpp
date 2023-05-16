@@ -38,6 +38,7 @@ public:
            float fallMultiplier,
            float jumpFallMultiplier,
            float MaxFallSpeed,
+           float CoyoteTime,
            sf::Vector2f size,
            sf::Vector2f position,
            std::vector<Tile> &tileGroup)
@@ -49,6 +50,7 @@ public:
           playerFallMultiplier(fallMultiplier),
           playerJumpFallMultiplier(jumpFallMultiplier),
           playerMaxFallSpeed(MaxFallSpeed),
+          playerCoyoteTime(CoyoteTime),
           playerSize(size),
           playerStartPosition(position),
           playerTileGroup(tileGroup) {
@@ -105,11 +107,18 @@ public:
     }
 
     void verticalMovement(float deltaTime) {
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerIsGrounded) {
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerCoyoteTimeTimer > 0.0f) {
             playerDirection.y = playerJumpVelocity;
+            playerCoyoteTimeTimer = 0.0f;
             playerIsGrounded = false;
         } else if (playerDirection.y > 0.0f && playerIsGrounded) {
             playerIsGrounded = false;
+        }
+
+        if (playerIsGrounded) {
+            playerCoyoteTimeTimer = playerCoyoteTime;
+        } else {
+            playerCoyoteTimeTimer -= deltaTime;
         }
 
         if (playerDirection.y > playerMaxFallSpeed) {
@@ -195,11 +204,13 @@ private:
     float playerFallMultiplier;
     float playerJumpFallMultiplier;
     float playerMaxFallSpeed;
+    float playerCoyoteTime;
     sf::Vector2f playerSize;
     sf::Vector2f playerStartPosition;
     std::vector<Tile> playerTileGroup;
 
-    bool playerIsGrounded;
+    bool playerIsGrounded = false;
+    float playerCoyoteTimeTimer = 0.0f;
     sf::RectangleShape playerRectangle;
     sf::Vector2f playerDirection;
 };
@@ -271,6 +282,7 @@ int main() {
         3.0f,                                           // player fall multiplier
         5.0f,                                           // player jump fall multiplier
         1085.0f,                                        // player max fall speed
+        0.1f,                                           // player coyote time
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup);
