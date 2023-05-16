@@ -259,14 +259,14 @@ int main() {
 
     Player player(
         sf::Color::White,                               // player color
-        7675.0f,                                        // player playerAcceleration
+        7675.0f,                                        // player acceleration
         405.0f,                                         // player max speed
         2175.0f,                                        // player gravity
         -850.0f,                                        // player jump velocity
-        3.0f,                                           // fall multiplier
-        5.0f,                                           // jump fall multiplier
+        3.0f,                                           // player fall multiplier
+        5.0f,                                           // player jump fall multiplier
         sf::Vector2f(36.0f, 72.0f),                     // player size
-        sf::Vector2f(playerPositionX, playerPositionY), // player position
+        sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup);
 
     while (window.isOpen()) {
