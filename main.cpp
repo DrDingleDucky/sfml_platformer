@@ -37,6 +37,7 @@ public:
            float jumpVelocity,
            float fallMultiplier,
            float jumpFallMultiplier,
+           float MaxFallSpeed,
            sf::Vector2f size,
            sf::Vector2f position,
            std::vector<Tile> &tileGroup)
@@ -47,6 +48,7 @@ public:
           playerJumpVelocity(jumpVelocity),
           playerFallMultiplier(fallMultiplier),
           playerJumpFallMultiplier(jumpFallMultiplier),
+          playerMaxFallSpeed(MaxFallSpeed),
           playerSize(size),
           playerStartPosition(position),
           playerTileGroup(tileGroup) {
@@ -110,7 +112,9 @@ public:
             playerIsGrounded = false;
         }
 
-        if (playerDirection.y > 0.0f) {
+        if (playerDirection.y > playerMaxFallSpeed) {
+            playerDirection.y = playerMaxFallSpeed;
+        } else if (playerDirection.y > 0.0f) {
             playerDirection.y += playerGravity * playerFallMultiplier * deltaTime;
         } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerDirection.y < 0.0f) {
             playerDirection.y += playerGravity * playerJumpFallMultiplier * deltaTime;
@@ -190,6 +194,7 @@ private:
     float playerJumpVelocity;
     float playerFallMultiplier;
     float playerJumpFallMultiplier;
+    float playerMaxFallSpeed;
     sf::Vector2f playerSize;
     sf::Vector2f playerStartPosition;
     std::vector<Tile> playerTileGroup;
@@ -265,6 +270,7 @@ int main() {
         -850.0f,                                        // player jump velocity
         3.0f,                                           // player fall multiplier
         5.0f,                                           // player jump fall multiplier
+        1085.0f,                                        // player max fall speed
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup);

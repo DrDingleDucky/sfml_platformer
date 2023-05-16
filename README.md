@@ -10,8 +10,6 @@ add jumb buffer
 
 add coyote time
 
-add max fall speed
-
 add wall jump
 
 add wall climb
