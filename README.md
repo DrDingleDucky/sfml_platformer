@@ -1,14 +1,14 @@
 # SFML Platformer
 
-2d platformer in SFML.
+2d platformer movement in SFML.
 
 ## To-Do
 
-add apex modifiers
+add coyote time
 
 add jumb buffer
 
-add coyote time
+add apex modifiers
 
 add wall jump
 
