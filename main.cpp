@@ -38,20 +38,19 @@ public:
     float playerJumpFallMultiplier;
     float playerMaxFallSpeed;
     float playerCoyoteTime;
+    std::vector<Tile> playerTileGroup;
 
     Player(sf::Color color,
            sf::Vector2f size,
-           sf::Vector2f position,
-           std::vector<Tile> &tileGroup)
+           sf::Vector2f position)
         : playerColor(color),
           playerSize(size),
           playerStartPosition(position),
-          playerTileGroup(tileGroup) {
+          playerIsGrounded(false),
+          playerCoyoteTimeTimer(0.0f) {
         playerRectangle.setFillColor(playerColor);
         playerRectangle.setSize(playerSize);
         playerRectangle.setPosition(playerStartPosition);
-        playerIsGrounded = false;
-        playerCoyoteTimeTimer = 0.0f;
     }
 
     void update(sf::RenderWindow &window, float deltaTime) {
@@ -72,7 +71,6 @@ private:
     sf::Color playerColor;
     sf::Vector2f playerSize;
     sf::Vector2f playerStartPosition;
-    std::vector<Tile> playerTileGroup;
 
     bool playerIsGrounded;
     float playerCoyoteTimeTimer;
@@ -261,10 +259,9 @@ int main() {
     loadLevel(playerPositionX, playerPositionY, tileGroup);
 
     Player player(
-        sf::Color::White,                               // player color
-        sf::Vector2f(36.0f, 72.0f),                     // player size
-        sf::Vector2f(playerPositionX, playerPositionY), // player start position
-        tileGroup);
+        sf::Color::White,                                // player color
+        sf::Vector2f(36.0f, 72.0f),                      // player size
+        sf::Vector2f(playerPositionX, playerPositionY)); // player start position
 
     player.playerAcceleration = 7646.0f;
     player.playerMaxSpeed = 405.0f;
@@ -274,6 +271,7 @@ int main() {
     player.playerJumpFallMultiplier = 5.0f;
     player.playerMaxFallSpeed = 1085.0f;
     player.playerCoyoteTime = 0.1f;
+    player.playerTileGroup = tileGroup;
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
