@@ -30,34 +30,54 @@ private:
 
 class Player {
 public:
+    float playerAcceleration;
+    float playerMaxSpeed;
+    float playerGravity;
+    float playerJumpVelocity;
+    float playerFallMultiplier;
+    float playerJumpFallMultiplier;
+    float playerMaxFallSpeed;
+    float playerCoyoteTime;
+
     Player(sf::Color color,
-           float acceleration,
-           float maxSpeed,
-           float gravity,
-           float jumpVelocity,
-           float fallMultiplier,
-           float jumpFallMultiplier,
-           float MaxFallSpeed,
-           float CoyoteTime,
            sf::Vector2f size,
            sf::Vector2f position,
            std::vector<Tile> &tileGroup)
         : playerColor(color),
-          playerAcceleration(acceleration),
-          playerMaxSpeed(maxSpeed),
-          playerGravity(gravity),
-          playerJumpVelocity(jumpVelocity),
-          playerFallMultiplier(fallMultiplier),
-          playerJumpFallMultiplier(jumpFallMultiplier),
-          playerMaxFallSpeed(MaxFallSpeed),
-          playerCoyoteTime(CoyoteTime),
           playerSize(size),
           playerStartPosition(position),
           playerTileGroup(tileGroup) {
         playerRectangle.setFillColor(playerColor);
         playerRectangle.setSize(playerSize);
         playerRectangle.setPosition(playerStartPosition);
+        playerIsGrounded = false;
+        playerCoyoteTimeTimer = 0.0f;
     }
+
+    void update(sf::RenderWindow &window, float deltaTime) {
+        horizontalMovement(deltaTime);
+        horizontalCollisions();
+
+        verticalMovement(deltaTime);
+        verticalCollisions();
+
+        camera(window);
+    }
+
+    void draw(sf::RenderWindow &window) {
+        window.draw(playerRectangle);
+    }
+
+private:
+    sf::Color playerColor;
+    sf::Vector2f playerSize;
+    sf::Vector2f playerStartPosition;
+    std::vector<Tile> playerTileGroup;
+
+    bool playerIsGrounded;
+    float playerCoyoteTimeTimer;
+    sf::RectangleShape playerRectangle;
+    sf::Vector2f playerDirection;
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
@@ -180,39 +200,6 @@ public:
                 window.getSize().x, window.getSize().y)));
         }
     }
-
-    void update(sf::RenderWindow &window, float deltaTime) {
-        horizontalMovement(deltaTime);
-        horizontalCollisions();
-
-        verticalMovement(deltaTime);
-        verticalCollisions();
-
-        camera(window);
-    }
-
-    void draw(sf::RenderWindow &window) {
-        window.draw(playerRectangle);
-    }
-
-private:
-    sf::Color playerColor;
-    float playerAcceleration;
-    float playerMaxSpeed;
-    float playerGravity;
-    float playerJumpVelocity;
-    float playerFallMultiplier;
-    float playerJumpFallMultiplier;
-    float playerMaxFallSpeed;
-    float playerCoyoteTime;
-    sf::Vector2f playerSize;
-    sf::Vector2f playerStartPosition;
-    std::vector<Tile> playerTileGroup;
-
-    bool playerIsGrounded = false;
-    float playerCoyoteTimeTimer = 0.0f;
-    sf::RectangleShape playerRectangle;
-    sf::Vector2f playerDirection;
 };
 
 void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile> &tileGroup) {
@@ -275,17 +262,18 @@ int main() {
 
     Player player(
         sf::Color::White,                               // player color
-        7675.0f,                                        // player acceleration
-        405.0f,                                         // player max speed
-        2175.0f,                                        // player gravity
-        -850.0f,                                        // player jump velocity
-        3.0f,                                           // player fall multiplier
-        5.0f,                                           // player jump fall multiplier
-        1085.0f,                                        // player max fall speed
-        0.1f,                                           // player coyote time
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup);
+    
+    player.playerAcceleration = 7646.0f;
+    player.playerMaxSpeed = 405.0f;
+    player.playerGravity = 2175.0f;
+    player.playerJumpVelocity = -850.0f;
+    player.playerFallMultiplier = 3.0f;
+    player.playerJumpFallMultiplier = 5.0f;
+    player.playerMaxFallSpeed = 1085.0f;
+    player.playerCoyoteTime = 0.1f;
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
