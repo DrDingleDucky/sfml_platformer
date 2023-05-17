@@ -265,7 +265,7 @@ int main() {
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup);
-    
+
     player.playerAcceleration = 7646.0f;
     player.playerMaxSpeed = 405.0f;
     player.playerGravity = 2175.0f;
