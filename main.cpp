@@ -53,11 +53,47 @@ public:
           playerCoyoteTime(CoyoteTime),
           playerSize(size),
           playerStartPosition(position),
-          playerTileGroup(tileGroup) {
+          playerTileGroup(tileGroup),
+          playerIsGrounded(false),
+          playerCoyoteTimeTimer(0.0f),
+          playerDirection(sf::Vector2f(0.0f, 0.0f)) {
         playerRectangle.setFillColor(playerColor);
         playerRectangle.setSize(playerSize);
         playerRectangle.setPosition(playerStartPosition);
     }
+
+    void update(sf::RenderWindow &window, float deltaTime) {
+        horizontalMovement(deltaTime);
+        horizontalCollisions();
+
+        verticalMovement(deltaTime);
+        verticalCollisions();
+
+        camera(window);
+    }
+
+    void draw(sf::RenderWindow &window) {
+        window.draw(playerRectangle);
+    }
+
+private:
+    sf::Color playerColor;
+    float playerAcceleration;
+    float playerMaxSpeed;
+    float playerGravity;
+    float playerJumpVelocity;
+    float playerFallMultiplier;
+    float playerJumpFallMultiplier;
+    float playerMaxFallSpeed;
+    float playerCoyoteTime;
+    sf::Vector2f playerSize;
+    sf::Vector2f playerStartPosition;
+    std::vector<Tile> playerTileGroup;
+
+    bool playerIsGrounded;
+    float playerCoyoteTimeTimer;
+    sf::Vector2f playerDirection;
+    sf::RectangleShape playerRectangle;
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
@@ -180,39 +216,6 @@ public:
                 window.getSize().x, window.getSize().y)));
         }
     }
-
-    void update(sf::RenderWindow &window, float deltaTime) {
-        horizontalMovement(deltaTime);
-        horizontalCollisions();
-
-        verticalMovement(deltaTime);
-        verticalCollisions();
-
-        camera(window);
-    }
-
-    void draw(sf::RenderWindow &window) {
-        window.draw(playerRectangle);
-    }
-
-private:
-    sf::Color playerColor;
-    float playerAcceleration;
-    float playerMaxSpeed;
-    float playerGravity;
-    float playerJumpVelocity;
-    float playerFallMultiplier;
-    float playerJumpFallMultiplier;
-    float playerMaxFallSpeed;
-    float playerCoyoteTime;
-    sf::Vector2f playerSize;
-    sf::Vector2f playerStartPosition;
-    std::vector<Tile> playerTileGroup;
-
-    bool playerIsGrounded = false;
-    float playerCoyoteTimeTimer = 0.0f;
-    sf::RectangleShape playerRectangle;
-    sf::Vector2f playerDirection;
 };
 
 void loadLevel(float &playerPositionX, float &playerPositionY, std::vector<Tile> &tileGroup) {
