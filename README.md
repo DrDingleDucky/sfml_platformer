@@ -4,8 +4,6 @@
 
 ## To-Do
 
-add coyote time
-
 add jumb buffer
 
 add apex modifiers
