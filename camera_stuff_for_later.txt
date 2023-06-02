@@ -1,0 +1,80 @@
+        // follow camera
+        // window.setView(sf::View(sf::FloatRect(
+        //     playerRectangle.getPosition().x +
+        //         playerRectangle.getSize().x / 2.0f - window.getSize().x / 2.0f,
+        //     playerRectangle.getPosition().y +
+        //         playerRectangle.getSize().y / 2.0f - window.getSize().y / 2.0f,
+        //     window.getSize().x,
+        //     window.getSize().y)));
+
+        // stationary camera
+        // if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f <
+        //     window.getView().getCenter().x - window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
+        //            window.getView().getCenter().x + window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
+        //            window.getView().getCenter().y - window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
+        //            window.getView().getCenter().y + window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // }
+
+        // horizontal camera
+        // if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
+        //            window.getView().getCenter().y - window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
+        //         window.getSize().x,
+        //         window.getSize().y)));
+        // } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
+        //            window.getView().getCenter().y + window.getSize().y / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
+        //         window.getSize().x,
+        //         window.getSize().y)));
+        // } else {
+        //     window.setView(sf::View(sf::FloatRect(
+        //     playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f - window.getSize().x / 2.0f,
+        //     window.getView().getCenter().y - window.getSize().y / 2.0f,
+        //     window.getSize().x,
+        //     window.getSize().y)));
+        // }
+
+        // vertical camera
+        // if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f <
+        //     window.getView().getCenter().x - window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y - window.getSize().y / 2.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
+        //            window.getView().getCenter().x + window.getSize().x / 2.0f) {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
+        //         window.getView().getCenter().y + window.getSize().y / 2.0f,
+        //         window.getSize().x, window.getSize().y)));
+        // } else {
+        //     window.setView(sf::View(sf::FloatRect(
+        //         window.getView().getCenter().x - window.getSize().x / 2.0f,
+        //         playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f - window.getSize().y / 2.0f,
+        //         window.getSize().x,
+        //         window.getSize().y)));
+        // }
+        
