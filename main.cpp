@@ -293,8 +293,7 @@ void loadLevel(float &playerPositionX,
                         sf::Color::Black,
                         sf::Vector2f(36.0f, 36.0f),
                         sf::Vector2f(x, y)));
-                } 
-                else if (line[collom_index] == '1') { // 1 - tile
+                } else if (line[collom_index] == '1') { // 1 - tile
                     tileGroup.push_back(Tile(
                         sf::Color::Black,
                         sf::Vector2f(36.0f, 36.0f),
