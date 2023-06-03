@@ -23,3 +23,7 @@ make a more dynamic 2d camera
 ### Level Loader
 
 load and unload different levels
+
+## Compile
+
+g++ main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system
