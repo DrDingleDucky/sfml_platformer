@@ -4,18 +4,45 @@
 #include <string>
 #include <vector>
 
-class Tile {
+class Tile1 {
 public:
     sf::RectangleShape tileRectangle;
-    Tile(sf::Color color,
-         sf::Vector2f size,
-         sf::Vector2f position)
+    Tile1(sf::Color color,
+          sf::Vector2f size,
+          sf::Vector2f position)
         : tileColor(color),
           tileSize(size),
           tileStartPosition(position) {
         tileRectangle.setFillColor(tileColor);
         tileRectangle.setSize(tileSize);
         tileRectangle.setPosition(tileStartPosition);
+    }
+
+    void draw(sf::RenderWindow &window) {
+        window.draw(tileRectangle);
+    }
+
+private:
+    sf::Color tileColor;
+    sf::Vector2f tileSize;
+    sf::Vector2f tileStartPosition;
+};
+
+class Tile2 {
+public:
+    sf::RectangleShape tileRectangle;
+    sf::RectangleShape tileRectangleTop;
+    Tile2(sf::Color color,
+          sf::Vector2f size,
+          sf::Vector2f position)
+        : tileColor(color),
+          tileSize(size),
+          tileStartPosition(position) {
+        tileRectangle.setFillColor(tileColor);
+        tileRectangle.setSize(tileSize);
+        tileRectangle.setPosition(tileStartPosition);
+        tileRectangleTop.setSize(sf::Vector2f(tileRectangle.getSize().x, 1.0f));
+        tileRectangleTop.setPosition(sf::Vector2f(tileRectangle.getPosition().x, tileRectangle.getPosition().y));
     }
 
     void draw(sf::RenderWindow &window) {
@@ -41,7 +68,8 @@ public:
            float CoyoteTime,
            sf::Vector2f size,
            sf::Vector2f position,
-           std::vector<Tile> &tileGroup)
+           std::vector<Tile1> &tileGroup1,
+           std::vector<Tile2> &tileGroup2)
         : playerColor(color),
           playerAcceleration(acceleration),
           playerMaxSpeed(maxSpeed),
@@ -53,16 +81,24 @@ public:
           playerCoyoteTime(CoyoteTime),
           playerSize(size),
           playerStartPosition(position),
-          playerTileGroup(tileGroup),
-          playerIsGrounded(false),
+          playerTileGroup1(tileGroup1),
+          playerTileGroup2(tileGroup2),
+          playerIsGrounded1(false),
+          playerIsGrounded2(false),
           playerCoyoteTimeTimer(0.0f),
           playerDirection(sf::Vector2f(0.0f, 0.0f)) {
         playerRectangle.setFillColor(playerColor);
         playerRectangle.setSize(playerSize);
         playerRectangle.setPosition(playerStartPosition);
+        playerRectangleBottom.setSize(sf::Vector2f(playerRectangle.getSize().x, 1.0f));
+        playerRectangleBottom.setPosition(sf::Vector2f(playerRectangle.getPosition().x,
+                                                       playerRectangle.getPosition().y + playerRectangle.getSize().y - 1.0f));
     }
 
     void update(sf::RenderWindow &window, float deltaTime) {
+        playerRectangleBottom.setPosition(sf::Vector2f(playerRectangle.getPosition().x,
+                                                       playerRectangle.getPosition().y + playerRectangle.getSize().y - 1.0f));
+
         horizontalMovement(deltaTime);
         horizontalCollisions();
 
@@ -88,12 +124,15 @@ private:
     float playerCoyoteTime;
     sf::Vector2f playerSize;
     sf::Vector2f playerStartPosition;
-    std::vector<Tile> playerTileGroup;
+    std::vector<Tile1> playerTileGroup1;
+    std::vector<Tile2> playerTileGroup2;
 
-    bool playerIsGrounded;
+    bool playerIsGrounded1;
+    bool playerIsGrounded2;
     float playerCoyoteTimeTimer;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRectangle;
+    sf::RectangleShape playerRectangleBottom;
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
@@ -110,8 +149,14 @@ private:
         } else {
             if (playerDirection.x > 0.0f) {
                 playerDirection.x -= playerAcceleration * deltaTime;
+                if (playerDirection.x < 0.0f) {
+                    playerDirection.x = 0.0f;
+                }
             } else if (playerDirection.x < 0.0f) {
                 playerDirection.x += playerAcceleration * deltaTime;
+                if (playerDirection.x > 0.0f) {
+                    playerDirection.x = 0.0f;
+                }
             }
         }
 
@@ -125,7 +170,7 @@ private:
     }
 
     void horizontalCollisions() {
-        for (auto &tile : playerTileGroup) {
+        for (auto &tile : playerTileGroup1) {
             if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.x > 0.0f) {
                     playerDirection.x = 0.0f;
@@ -146,12 +191,12 @@ private:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerCoyoteTimeTimer > 0.0f) {
             playerDirection.y = playerJumpVelocity;
             playerCoyoteTimeTimer = 0.0f;
-            playerIsGrounded = false;
-        } else if (playerDirection.y > 0.0f && playerIsGrounded) {
-            playerIsGrounded = false;
+            playerIsGrounded1 = false;
+        } else if (playerDirection.y > 0.0f && playerIsGrounded1) {
+            playerIsGrounded1 = false;
         }
 
-        if (playerIsGrounded) {
+        if (playerIsGrounded1) {
             playerCoyoteTimeTimer = playerCoyoteTime;
         } else {
             playerCoyoteTimeTimer -= deltaTime;
@@ -171,10 +216,10 @@ private:
     }
 
     void verticalCollisions() {
-        for (auto &tile : playerTileGroup) {
+        for (auto &tile : playerTileGroup1) {
             if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f) {
-                    playerIsGrounded = true;
+                    playerIsGrounded1 = true;
                     playerDirection.y = 0.0f;
                     playerRectangle.setPosition(sf::Vector2f(
                         playerRectangle.getPosition().x,
@@ -184,6 +229,18 @@ private:
                     playerRectangle.setPosition(sf::Vector2f(
                         playerRectangle.getPosition().x,
                         tile.tileRectangle.getGlobalBounds().top + tile.tileRectangle.getSize().y));
+                }
+            }
+        }
+
+        for (auto &tile : playerTileGroup2) {
+            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
+                if (playerDirection.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    playerIsGrounded1 = true;
+                    playerDirection.y = 0.0f;
+                    playerRectangle.setPosition(sf::Vector2f(
+                        playerRectangle.getPosition().x,
+                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
                 }
             }
         }
@@ -304,7 +361,7 @@ private:
     }
 };
 
-void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, std::vector<Tile> &tileGroup) {
+void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, std::vector<Tile1> &tileGroup1, std::vector<Tile2> &tileGroup2) {
     std::ifstream file(map);
     std::string line;
 
@@ -317,10 +374,20 @@ void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, 
             for (float collom_index = 0.0f; collom_index < line.length(); collom_index++) {
                 x = collom_index * 36.0f;
                 y = row_index * 36.0f;
-                if (line[collom_index] == 't') { // t - tile
-                    tileGroup.push_back(Tile(
-                        sf::Color::Black,
+                if (line[collom_index] == '1') { // 1 - normal tile
+                    tileGroup1.push_back(Tile1(
+                        sf::Color(0, 0, 0),
                         sf::Vector2f(36.0f, 36.0f),
+                        sf::Vector2f(x, y)));
+                } else if (line[collom_index] == '2') { // 2 - small tile
+                    tileGroup1.push_back(Tile1(
+                        sf::Color(0, 0, 0),
+                        sf::Vector2f(36.0f, 9.0f),
+                        sf::Vector2f(x, y)));
+                } else if (line[collom_index] == '3') { // 3 - one way tile
+                    tileGroup2.push_back(Tile2(
+                        sf::Color(139,69,19),
+                        sf::Vector2f(36.0f, 9.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == 'p') { // p - player
                     playerPositionX = x;
@@ -355,12 +422,13 @@ int main() {
     sf::Clock clock;
     float deltaTime;
 
-    std::vector<Tile> tileGroup;
+    std::vector<Tile1> tileGroup1;
+    std::vector<Tile2> tileGroup2;
 
     float playerPositionX;
     float playerPositionY;
 
-    loadLevel(std::string("map.txt"), playerPositionX, playerPositionY, tileGroup);
+    loadLevel(std::string("map.txt"), playerPositionX, playerPositionY, tileGroup1, tileGroup2);
 
     Player player(
         sf::Color::White,                               // player color
@@ -374,7 +442,8 @@ int main() {
         0.1f,                                           // player coyote time
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
-        tileGroup);
+        tileGroup1,
+        tileGroup2);
 
     while (window.isOpen()) {
         while (window.pollEvent(event)) {
@@ -390,11 +459,15 @@ int main() {
 
         window.clear(sf::Color(64, 64, 64, 255));
 
-        player.draw(window);
-
-        for (auto &tile : tileGroup) {
+        for (auto &tile : tileGroup1) {
             tile.draw(window);
         }
+
+        for (auto &tile : tileGroup2) {
+            tile.draw(window);
+        }
+
+        player.draw(window);
 
         window.display();
     }
