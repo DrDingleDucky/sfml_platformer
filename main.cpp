@@ -310,7 +310,7 @@ void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, 
 }
 
 int main() {
-    std::string windowTitle = "2d platformer movement";
+    std::string windowTitle = "2d platformer";
     int windowWidth = 1260;
     int windowHeight = 900;
 
