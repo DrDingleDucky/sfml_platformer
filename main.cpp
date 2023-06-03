@@ -189,14 +189,34 @@ private:
         }
     }
 
-    void followCamera(sf::RenderWindow &window) {
-        window.setView(sf::View(sf::FloatRect(
-            playerRectangle.getPosition().x +
-                playerRectangle.getSize().x / 2.0f - window.getSize().x / 2.0f,
-            playerRectangle.getPosition().y +
-                playerRectangle.getSize().y / 2.0f - window.getSize().y / 2.0f,
-            window.getSize().x,
-            window.getSize().y)));
+    void followCamera(float deadZone, sf::RenderWindow &window) {
+        if (playerRectangle.getPosition().x + playerRectangle.getSize().x > window.getView().getCenter().x + deadZone) {
+            window.setView(sf::View(sf::FloatRect(
+                playerRectangle.getPosition().x + playerRectangle.getSize().x - window.getSize().x / 2.0f - deadZone,
+                window.getView().getCenter().y - window.getSize().y / 2.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        } else if (playerRectangle.getPosition().x < window.getView().getCenter().x - deadZone) {
+            window.setView(sf::View(sf::FloatRect(
+                playerRectangle.getPosition().x - window.getSize().x / 2.0f + deadZone,
+                window.getView().getCenter().y - window.getSize().y / 2.0f,
+                window.getSize().x,
+                window.getSize().y)));
+        }
+
+        if (playerRectangle.getPosition().y + playerRectangle.getSize().y > window.getView().getCenter().y + deadZone) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - window.getSize().x / 2.0f,
+                playerRectangle.getPosition().y + playerRectangle.getSize().y - window.getSize().y / 2.0f - deadZone,
+                window.getSize().x,
+                window.getSize().y)));
+        } else if (playerRectangle.getPosition().y < window.getView().getCenter().y - deadZone) {
+            window.setView(sf::View(sf::FloatRect(
+                window.getView().getCenter().x - window.getSize().x / 2.0f,
+                playerRectangle.getPosition().y - window.getSize().y / 2.0f + deadZone,
+                window.getSize().x,
+                window.getSize().y)));
+        }
     }
 
     void stationaryCamera(sf::RenderWindow &window) {
@@ -205,25 +225,29 @@ private:
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
                    window.getView().getCenter().x + window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y + window.getSize().y / 2.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
                    window.getView().getCenter().y - window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
                    window.getView().getCenter().y + window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
                 window.getView().getCenter().y + window.getSize().y / 2.0f * 3.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         }
     }
 
@@ -257,13 +281,15 @@ private:
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
                    window.getView().getCenter().x + window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y + window.getSize().y / 2.0f,
-                window.getSize().x, window.getSize().y)));
+                window.getSize().x,
+                window.getSize().y)));
         } else {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
