@@ -274,7 +274,7 @@ private:
     }
 
     void camera(sf::RenderWindow &window) {
-        followCamera(window);
+        horizontalCamera(window);
     }
 };
 
