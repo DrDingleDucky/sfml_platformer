@@ -83,8 +83,7 @@ public:
           playerStartPosition(position),
           playerTileGroup1(tileGroup1),
           playerTileGroup2(tileGroup2),
-          playerIsGrounded1(false),
-          playerIsGrounded2(false),
+          playerIsGrounded(false),
           playerCoyoteTimeTimer(0.0f),
           playerDirection(sf::Vector2f(0.0f, 0.0f)) {
         playerRectangle.setFillColor(playerColor);
@@ -127,8 +126,7 @@ private:
     std::vector<Tile1> playerTileGroup1;
     std::vector<Tile2> playerTileGroup2;
 
-    bool playerIsGrounded1;
-    bool playerIsGrounded2;
+    bool playerIsGrounded;
     float playerCoyoteTimeTimer;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRectangle;
@@ -191,12 +189,12 @@ private:
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerCoyoteTimeTimer > 0.0f) {
             playerDirection.y = playerJumpVelocity;
             playerCoyoteTimeTimer = 0.0f;
-            playerIsGrounded1 = false;
-        } else if (playerDirection.y > 0.0f && playerIsGrounded1) {
-            playerIsGrounded1 = false;
+            playerIsGrounded = false;
+        } else if (playerDirection.y > 0.0f && playerIsGrounded) {
+            playerIsGrounded = false;
         }
 
-        if (playerIsGrounded1) {
+        if (playerIsGrounded) {
             playerCoyoteTimeTimer = playerCoyoteTime;
         } else {
             playerCoyoteTimeTimer -= deltaTime;
@@ -219,7 +217,7 @@ private:
         for (auto &tile : playerTileGroup1) {
             if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f) {
-                    playerIsGrounded1 = true;
+                    playerIsGrounded = true;
                     playerDirection.y = 0.0f;
                     playerRectangle.setPosition(sf::Vector2f(
                         playerRectangle.getPosition().x,
@@ -236,7 +234,7 @@ private:
         for (auto &tile : playerTileGroup2) {
             if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                    playerIsGrounded1 = true;
+                    playerIsGrounded = true;
                     playerDirection.y = 0.0f;
                     playerRectangle.setPosition(sf::Vector2f(
                         playerRectangle.getPosition().x,
