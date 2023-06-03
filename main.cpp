@@ -41,6 +41,14 @@ public:
            float CoyoteTime,
            sf::Vector2f size,
            sf::Vector2f position,
+           float leftX,
+           float leftY,
+           float rightX,
+           float rightY,
+           float topX,
+           float topY,
+           float bottomX,
+           float bottomY,
            std::vector<Tile> &tileGroup)
         : playerColor(color),
           playerAcceleration(acceleration),
@@ -53,6 +61,14 @@ public:
           playerCoyoteTime(CoyoteTime),
           playerSize(size),
           playerStartPosition(position),
+          cameraLeftX(leftX),
+          cameraLeftY(leftY),
+          cameraRightX(rightX),
+          cameraRightY(rightY),
+          cameraTopX(topX),
+          cameraTopY(topY),
+          cameraBottomX(bottomX),
+          cameraBottomY(bottomY),
           playerTileGroup(tileGroup),
           playerIsGrounded(false),
           playerCoyoteTimeTimer(0.0f),
@@ -62,35 +78,22 @@ public:
         playerRectangle.setPosition(playerStartPosition);
     }
 
-    void update(sf::RenderWindow &window,
-                float leftX,
-                float leftY,
-                float rightX,
-                float rightY,
-                float topX,
-                float topY,
-                float bottomX,
-                float bottomY,
-                float deltaTime) {
+    void update(sf::RenderWindow &window, float deltaTime) {
         horizontalMovement(deltaTime);
         horizontalCollisions();
 
         verticalMovement(deltaTime);
         verticalCollisions();
 
-        camera(window,
-               leftX,
-               leftY,
-               rightX,
-               rightY,
-               topX,
-               topY,
-               bottomX,
-               bottomY);
+        camera(window);
     }
 
     void draw(sf::RenderWindow &window) {
         window.draw(playerRectangle);
+
+        for (auto &tile : playerTileGroup) {
+            tile.draw(window);
+        }
     }
 
 private:
@@ -105,13 +108,89 @@ private:
     float playerCoyoteTime;
     sf::Vector2f playerSize;
     sf::Vector2f playerStartPosition;
-
+    float cameraLeftX;
+    float cameraLeftY;
+    float cameraRightX;
+    float cameraRightY;
+    float cameraTopX;
+    float cameraTopY;
+    float cameraBottomX;
+    float cameraBottomY;
     std::vector<Tile> playerTileGroup;
 
     bool playerIsGrounded;
     float playerCoyoteTimeTimer;
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRectangle;
+
+    void load(std::string map,
+              float &leftX,
+              float &leftY,
+              float &rightX,
+              float &rightY,
+              float &topX,
+              float &topY,
+              float &bottomX,
+              float &bottomY,
+              std::vector<Tile> &tileGroup) {
+        std::ifstream file(map);
+        std::string line;
+
+        float x;
+        float y;
+
+        tileGroup.clear();
+
+        if (file.is_open()) {
+            float row_index = 0.0f;
+            while (std::getline(file, line)) {
+                for (float collom_index = 0.0f; collom_index < line.length(); collom_index++) {
+                    x = collom_index * 36.0f;
+                    y = row_index * 36.0f;
+                    if (line[collom_index] == 'p') { // p - player
+                    playerRectangle.setPosition(sf::Vector2f(x, y));
+                } else if (line[collom_index] == 'l') { // l - left
+                        leftX = x;
+                        leftY = y;
+                        tileGroup.push_back(Tile(
+                            sf::Color::Black,
+                            sf::Vector2f(36.0f, 36.0f),
+                            sf::Vector2f(x, y)));
+                    } else if (line[collom_index] == 'r') { // r - right
+                        rightX = x;
+                        rightY = y;
+                        tileGroup.push_back(Tile(
+                            sf::Color::Black,
+                            sf::Vector2f(36.0f, 36.0f),
+                            sf::Vector2f(x, y)));
+                    } else if (line[collom_index] == 't') { // t - top
+                        topX = x;
+                        topY = y;
+                        tileGroup.push_back(Tile(
+                            sf::Color::Black,
+                            sf::Vector2f(36.0f, 36.0f),
+                            sf::Vector2f(x, y)));
+                    } else if (line[collom_index] == 'b') { // b - bottom
+                        bottomX = x;
+                        bottomY = y;
+                        tileGroup.push_back(Tile(
+                            sf::Color::Black,
+                            sf::Vector2f(36.0f, 36.0f),
+                            sf::Vector2f(x, y)));
+                    } else if (line[collom_index] == '1') { // 1 - tile
+                        tileGroup.push_back(Tile(
+                            sf::Color::Black,
+                            sf::Vector2f(36.0f, 36.0f),
+                            sf::Vector2f(x, y)));
+                    }
+                }
+                row_index++;
+            }
+        } else {
+            std::cout << "error: can't open 'map.txt'\n";
+            exit(1);
+        }
+    }
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
@@ -207,28 +286,43 @@ private:
         }
     }
 
-    void camera(sf::RenderWindow &window,
-                float leftX,
-                float leftY,
-                float rightX,
-                float rightY,
-                float topX,
-                float topY,
-                float bottomX,
-                float bottomY) {
+    void camera(sf::RenderWindow &window) {
+        if (playerRectangle.getPosition().x < cameraLeftX) {
+            load(std::string("map1.txt"),
+                 cameraLeftX,
+                 cameraLeftY,
+                 cameraRightX,
+                 cameraRightY,
+                 cameraTopX,
+                 cameraTopY,
+                 cameraBottomX,
+                 cameraBottomY,
+                 playerTileGroup);
+        } else if (playerRectangle.getPosition().x > cameraRightX) {
+            load(std::string("map2.txt"),
+                 cameraLeftX,
+                 cameraLeftY,
+                 cameraRightX,
+                 cameraRightY,
+                 cameraTopX,
+                 cameraTopY,
+                 cameraBottomX,
+                 cameraBottomY,
+                 playerTileGroup);
+        }
 
         float cameraX = playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f - window.getSize().x / 2.0f;
         float cameraY = playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f - window.getSize().y / 2.0f;
 
-        if (cameraX < leftX) {
-            cameraX = leftX;
-        } else if (cameraX + window.getSize().x > rightX + 36.0f) {
-            cameraX = rightX - window.getSize().x + 36.0f;
+        if (cameraX < cameraLeftX) {
+            cameraX = cameraLeftX;
+        } else if (cameraX + window.getSize().x > cameraRightX + 36.0f) {
+            cameraX = cameraRightX - window.getSize().x + 36.0f;
         }
-        if (cameraY < topY) {
-            cameraY = topY;
-        } else if (cameraY + window.getSize().y > bottomY + 36.0f) {
-            cameraY = bottomY - window.getSize().y + 36.0f;
+        if (cameraY < cameraTopY) {
+            cameraY = cameraTopY;
+        } else if (cameraY + window.getSize().y > cameraBottomY + 36.0f) {
+            cameraY = cameraBottomY - window.getSize().y + 36.0f;
         }
 
         window.setView(sf::View(sf::FloatRect(
@@ -239,18 +333,19 @@ private:
     }
 };
 
-void loadLevel(float &playerPositionX,
-               float &playerPositionY,
-               float &leftX,
-               float &leftY,
-               float &rightX,
-               float &rightY,
-               float &topX,
-               float &topY,
-               float &bottomX,
-               float &bottomY,
-               std::vector<Tile> &tileGroup) {
-    std::ifstream file("map1.txt");
+void initLoad(std::string map,
+              float &playerPositionX,
+              float &playerPositionY,
+              float &leftX,
+              float &leftY,
+              float &rightX,
+              float &rightY,
+              float &topX,
+              float &topY,
+              float &bottomX,
+              float &bottomY,
+              std::vector<Tile> &tileGroup) {
+    std::ifstream file(map);
     std::string line;
 
     float x;
@@ -342,17 +437,18 @@ int main() {
     float bottomX;
     float bottomY;
 
-    loadLevel(playerPositionX,
-              playerPositionY,
-              leftX,
-              leftY,
-              rightX,
-              rightY,
-              topX,
-              topY,
-              bottomX,
-              bottomY,
-              tileGroup);
+    initLoad(std::string("map1.txt"),
+             playerPositionX,
+             playerPositionY,
+             leftX,
+             leftY,
+             rightX,
+             rightY,
+             topX,
+             topY,
+             bottomX,
+             bottomY,
+             tileGroup);
 
     Player player(
         sf::Color::White,                               // player color
@@ -366,6 +462,14 @@ int main() {
         0.1f,                                           // player coyote time
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
+        leftX,
+        leftY,
+        rightX,
+        rightY,
+        topX,
+        topY,
+        bottomX,
+        bottomY,
         tileGroup);
 
     while (window.isOpen()) {
@@ -378,24 +482,11 @@ int main() {
 
         deltaTime = clock.restart().asSeconds();
 
-        player.update(window,
-                      leftX,
-                      leftY,
-                      rightX,
-                      rightY,
-                      topX,
-                      topY,
-                      bottomX,
-                      bottomY,
-                      deltaTime);
+        player.update(window, deltaTime);
 
         window.clear(sf::Color(64, 64, 64, 255));
 
         player.draw(window);
-
-        for (auto &tile : tileGroup) {
-            tile.draw(window);
-        }
 
         window.display();
     }
