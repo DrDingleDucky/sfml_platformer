@@ -148,8 +148,8 @@ private:
                     x = collom_index * 36.0f;
                     y = row_index * 36.0f;
                     if (line[collom_index] == 'p') { // p - player
-                    playerRectangle.setPosition(sf::Vector2f(x, y));
-                } else if (line[collom_index] == 'l') { // l - left
+                        playerRectangle.setPosition(sf::Vector2f(x, y));
+                    } else if (line[collom_index] == 'l') { // l - left
                         leftX = x;
                         leftY = y;
                         tileGroup.push_back(Tile(
