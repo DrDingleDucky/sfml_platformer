@@ -1,6 +1,6 @@
 # SFML Platformer
 
-2d platformer movement in SFML.
+2d platformer in SFML.
 
 ## To-Do
 
@@ -19,3 +19,7 @@ add juice
 ### Camera
 
 make a more dynamic 2d camera
+
+### Level Loader
+
+load and unload different levels
