@@ -266,33 +266,33 @@ private:
         }
     }
 
-    void followCamera(float deadZone, sf::RenderWindow &window) {
+    void followCamera(float horizontalDeadZone, float verticalDeadZone, sf::RenderWindow &window) {
         if (m_rectangle.getPosition().x + m_rectangle.getSize().x >
-            window.getView().getCenter().x + deadZone) {
+            window.getView().getCenter().x + horizontalDeadZone) {
             window.setView(sf::View(sf::FloatRect(
-                m_rectangle.getPosition().x + m_rectangle.getSize().x - window.getSize().x / 2.0f - deadZone,
+                m_rectangle.getPosition().x + m_rectangle.getSize().x - window.getSize().x / 2.0f - horizontalDeadZone,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (m_rectangle.getPosition().x < window.getView().getCenter().x - deadZone) {
+        } else if (m_rectangle.getPosition().x < window.getView().getCenter().x - horizontalDeadZone) {
             window.setView(sf::View(sf::FloatRect(
-                m_rectangle.getPosition().x - window.getSize().x / 2.0f + deadZone,
+                m_rectangle.getPosition().x - window.getSize().x / 2.0f + horizontalDeadZone,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
         }
 
         if (m_rectangle.getPosition().y + m_rectangle.getSize().y >
-            window.getView().getCenter().y + deadZone) {
+            window.getView().getCenter().y + verticalDeadZone) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
-                m_rectangle.getPosition().y + m_rectangle.getSize().y - window.getSize().y / 2.0f - deadZone,
+                m_rectangle.getPosition().y + m_rectangle.getSize().y - window.getSize().y / 2.0f - verticalDeadZone,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (m_rectangle.getPosition().y < window.getView().getCenter().y - deadZone) {
+        } else if (m_rectangle.getPosition().y < window.getView().getCenter().y - verticalDeadZone) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
-                m_rectangle.getPosition().y - window.getSize().y / 2.0f + deadZone,
+                m_rectangle.getPosition().y - window.getSize().y / 2.0f + verticalDeadZone,
                 window.getSize().x,
                 window.getSize().y)));
         }
