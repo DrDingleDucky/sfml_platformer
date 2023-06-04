@@ -429,7 +429,7 @@ void loadLevel(std::string map,
 }
 
 int main() {
-    std::string windowTitle = "2d platformer";
+    std::string windowTitle = "sfml platformer";
     int windowWidth = 1260;
     int windowHeight = 900;
 
@@ -443,8 +443,6 @@ int main() {
                             sf::Style::Close);
     window.setPosition(sf::Vector2i(windowPositionX, windowPositionY));
 
-    sf::Event event;
-
     sf::Clock clock;
     float deltaTime;
 
@@ -454,7 +452,11 @@ int main() {
     float playerPositionX;
     float playerPositionY;
 
-    loadLevel(std::string("map.txt"), playerPositionX, playerPositionY, tileGroup1, tileGroup2);
+    loadLevel(std::string("map.txt"),
+              playerPositionX,
+              playerPositionY,
+              tileGroup1,
+              tileGroup2);
 
     Player player(
         sf::Color::White,                               // player color
@@ -473,6 +475,8 @@ int main() {
         tileGroup2);
 
     while (window.isOpen()) {
+        sf::Event event;
+
         while (window.pollEvent(event)) {
             if (event.type == sf::Event::Closed ||
                 sf::Keyboard::isKeyPressed(sf::Keyboard::Escape)) {
