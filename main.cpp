@@ -465,16 +465,16 @@ int main() {
     loadLevel(std::string("map.txt"), playerPositionX, playerPositionY, tileGroup1, tileGroup2);
 
     Player player(
-        sf::Color::White, // player color
-        7675.0f,          // player acceleration
-        405.0f,           // player max speed
-        2175.0f,          // player gravity
-        -850.0f,          // player jump velocity
-        3.0f,             // player fall multiplier
-        5.0f,             // player jump fall multiplier
-        1085.0f,          // player max fall speed
-        0.1f,             // player coyote time
-        0.12f,
+        sf::Color::White,                               // player color
+        7675.0f,                                        // player acceleration
+        405.0f,                                         // player max speed
+        2175.0f,                                        // player gravity
+        -850.0f,                                        // player jump velocity
+        3.0f,                                           // player fall multiplier
+        5.0f,                                           // player jump fall multiplier
+        1085.0f,                                        // player max fall speed
+        0.1f,                                           // player coyote time
+        0.12f,                                          // player jump buffer time
         sf::Vector2f(36.0f, 72.0f),                     // player size
         sf::Vector2f(playerPositionX, playerPositionY), // player start position
         tileGroup1,
