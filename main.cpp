@@ -4,56 +4,56 @@
 #include <string>
 #include <vector>
 
-class Tile1 {
+class MainTile {
 public:
-    sf::RectangleShape tileRectangle;
-    Tile1(sf::Color color,
+    sf::RectangleShape m_rectangle;
+    MainTile(sf::Color color,
           sf::Vector2f size,
           sf::Vector2f position)
-        : tileColor(color),
-          tileSize(size),
-          tileStartPosition(position) {
-        tileRectangle.setFillColor(tileColor);
-        tileRectangle.setSize(tileSize);
-        tileRectangle.setPosition(tileStartPosition);
+        : m_color(color),
+          m_size(size),
+          m_startPosition(position) {
+        m_rectangle.setFillColor(m_color);
+        m_rectangle.setSize(m_size);
+        m_rectangle.setPosition(m_startPosition);
     }
 
     void draw(sf::RenderWindow &window) {
-        window.draw(tileRectangle);
+        window.draw(m_rectangle);
     }
 
 private:
-    sf::Color tileColor;
-    sf::Vector2f tileSize;
-    sf::Vector2f tileStartPosition;
+    sf::Color m_color;
+    sf::Vector2f m_size;
+    sf::Vector2f m_startPosition;
 };
 
-class Tile2 {
+class OneWayTile {
 public:
-    sf::RectangleShape tileRectangle;
-    sf::RectangleShape tileRectangleTop;
-    Tile2(sf::Color color,
+    sf::RectangleShape m_rectangle;
+    sf::RectangleShape m_rectangleTop;
+    OneWayTile(sf::Color color,
           sf::Vector2f size,
           sf::Vector2f position)
-        : tileColor(color),
-          tileSize(size),
-          tileStartPosition(position) {
-        tileRectangle.setFillColor(tileColor);
-        tileRectangle.setSize(tileSize);
-        tileRectangle.setPosition(tileStartPosition);
-        tileRectangleTop.setSize(sf::Vector2f(tileRectangle.getSize().x, 1.0f));
-        tileRectangleTop.setPosition(sf::Vector2f(tileRectangle.getPosition().x,
-                                                  tileRectangle.getPosition().y));
+        : m_color(color),
+          m_size(size),
+          m_startPosition(position) {
+        m_rectangle.setFillColor(m_color);
+        m_rectangle.setSize(m_size);
+        m_rectangle.setPosition(m_startPosition);
+        m_rectangleTop.setSize(sf::Vector2f(m_rectangle.getSize().x, 1.0f));
+        m_rectangleTop.setPosition(sf::Vector2f(m_rectangle.getPosition().x,
+                                                m_rectangle.getPosition().y));
     }
 
     void draw(sf::RenderWindow &window) {
-        window.draw(tileRectangle);
+        window.draw(m_rectangle);
     }
 
 private:
-    sf::Color tileColor;
-    sf::Vector2f tileSize;
-    sf::Vector2f tileStartPosition;
+    sf::Color m_color;
+    sf::Vector2f m_size;
+    sf::Vector2f m_startPosition;
 };
 
 class Player {
@@ -70,41 +70,41 @@ public:
            float JumpBufferTime,
            sf::Vector2f size,
            sf::Vector2f position,
-           std::vector<Tile1> &tileGroup1,
-           std::vector<Tile2> &tileGroup2)
-        : playerColor(color),
-          playerAcceleration(acceleration),
-          playerMaxSpeed(maxSpeed),
-          playerGravity(gravity),
-          playerJumpVelocity(jumpVelocity),
-          playerFallMultiplier(fallMultiplier),
-          playerJumpFallMultiplier(jumpFallMultiplier),
-          playerMaxFallSpeed(MaxFallSpeed),
-          playerCoyoteTime(CoyoteTime),
-          playerJumpBufferTime(JumpBufferTime),
-          playerSize(size),
-          playerStartPosition(position),
-          playerTileGroup1(tileGroup1),
-          playerTileGroup2(tileGroup2),
-          playerIsGrounded(false),
-          playerHoldingSpace(false),
-          playerCoyoteTimeTimer(0.0f),
-          playerJumpBufferTimer(0.0f),
-          playerDirection(sf::Vector2f(0.0f, 0.0f)) {
-        playerRectangle.setFillColor(playerColor);
-        playerRectangle.setSize(playerSize);
-        playerRectangle.setPosition(playerStartPosition);
-        playerRectangleBottom.setSize(sf::Vector2f(playerRectangle.getSize().x, 1.0f));
-        playerRectangleBottom.setPosition(sf::Vector2f(playerRectangle.getPosition().x,
-                                                       playerRectangle.getPosition().y +
-                                                           playerRectangle.getSize().y - 1.0f));
+           std::vector<MainTile> &tileGroup1,
+           std::vector<OneWayTile> &tileGroup2)
+        : m_color(color),
+          m_acceleration(acceleration),
+          m_maxSpeed(maxSpeed),
+          m_gravity(gravity),
+          m_jumpVelocity(jumpVelocity),
+          m_fallMultiplier(fallMultiplier),
+          m_jumpFallMultiplier(jumpFallMultiplier),
+          m_maxFallSpeed(MaxFallSpeed),
+          m_coyoteTime(CoyoteTime),
+          m_jumpBufferTime(JumpBufferTime),
+          m_size(size),
+          m_startPosition(position),
+          m_tileGroup1(tileGroup1),
+          m_tileGroup2(tileGroup2),
+          m_isGrounded(false),
+          m_holdingSpace(false),
+          m_coyoteTimeTimer(0.0f),
+          m_jumpBufferTimer(0.0f),
+          m_direction(sf::Vector2f(0.0f, 0.0f)) {
+        m_rectangle.setFillColor(m_color);
+        m_rectangle.setSize(m_size);
+        m_rectangle.setPosition(m_startPosition);
+        m_rectangleBottom.setSize(sf::Vector2f(m_rectangle.getSize().x, 1.0f));
+        m_rectangleBottom.setPosition(sf::Vector2f(m_rectangle.getPosition().x,
+                                                   m_rectangle.getPosition().y +
+                                                       m_rectangle.getSize().y - 1.0f));
     }
 
     void update(sf::RenderWindow &window, float deltaTime) {
-        playerRectangleBottom.setPosition(sf::Vector2f(playerRectangle.getPosition().x,
-                                                       playerRectangle.getPosition().y +
-                                                           playerRectangle.getSize().y - 1.0f));
-        verticalCollisionTileGroup2();
+        m_rectangleBottom.setPosition(sf::Vector2f(m_rectangle.getPosition().x,
+                                                   m_rectangle.getPosition().y +
+                                                       m_rectangle.getSize().y - 1.0f));
+        collisionTileGroup2();
 
         horizontalMovement(deltaTime);
         horizontalCollisionsTileGroup1();
@@ -116,42 +116,42 @@ public:
     }
 
     void draw(sf::RenderWindow &window) {
-        window.draw(playerRectangle);
+        window.draw(m_rectangle);
     }
 
 private:
-    sf::Color playerColor;
-    float playerAcceleration;
-    float playerMaxSpeed;
-    float playerGravity;
-    float playerJumpVelocity;
-    float playerFallMultiplier;
-    float playerJumpFallMultiplier;
-    float playerMaxFallSpeed;
-    float playerCoyoteTime;
-    float playerJumpBufferTime;
-    sf::Vector2f playerSize;
-    sf::Vector2f playerStartPosition;
-    std::vector<Tile1> playerTileGroup1;
-    std::vector<Tile2> playerTileGroup2;
+    sf::Color m_color;
+    float m_acceleration;
+    float m_maxSpeed;
+    float m_gravity;
+    float m_jumpVelocity;
+    float m_fallMultiplier;
+    float m_jumpFallMultiplier;
+    float m_maxFallSpeed;
+    float m_coyoteTime;
+    float m_jumpBufferTime;
+    sf::Vector2f m_size;
+    sf::Vector2f m_startPosition;
+    std::vector<MainTile> m_tileGroup1;
+    std::vector<OneWayTile> m_tileGroup2;
 
-    bool playerIsGrounded;
-    bool playerHoldingSpace;
-    float playerCoyoteTimeTimer;
-    float playerJumpBufferTimer;
-    sf::Vector2f playerDirection;
-    sf::RectangleShape playerRectangle;
-    sf::RectangleShape playerRectangleBottom;
+    bool m_isGrounded;
+    bool m_holdingSpace;
+    float m_coyoteTimeTimer;
+    float m_jumpBufferTimer;
+    sf::Vector2f m_direction;
+    sf::RectangleShape m_rectangle;
+    sf::RectangleShape m_rectangleBottom;
 
-    void verticalCollisionTileGroup2() {
-        for (auto &tile : playerTileGroup2) {
-            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
-                if (playerDirection.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                    playerIsGrounded = true;
-                    playerDirection.y = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        playerRectangle.getPosition().x,
-                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
+    void collisionTileGroup2() {
+        for (auto &tile : m_tileGroup2) {
+            if (m_rectangleBottom.getGlobalBounds().intersects(tile.m_rectangleTop.getGlobalBounds())) {
+                if (m_direction.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    m_isGrounded = true;
+                    m_direction.y = 0.0f;
+                    m_rectangle.setPosition(sf::Vector2f(
+                        m_rectangle.getPosition().x,
+                        tile.m_rectangle.getGlobalBounds().top - m_rectangle.getSize().y));
                 }
             }
         }
@@ -160,167 +160,167 @@ private:
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
             sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            if (playerDirection.x > 0.0f) {
-                playerDirection.x -= playerAcceleration * deltaTime;
-            } else if (playerDirection.x < 0.0f) {
-                playerDirection.x += playerAcceleration * deltaTime;
+            if (m_direction.x > 0.0f) {
+                m_direction.x -= m_acceleration * deltaTime;
+            } else if (m_direction.x < 0.0f) {
+                m_direction.x += m_acceleration * deltaTime;
             }
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::A)) {
-            playerDirection.x -= playerAcceleration * deltaTime;
+            m_direction.x -= m_acceleration * deltaTime;
         } else if (sf::Keyboard::isKeyPressed(sf::Keyboard::D)) {
-            playerDirection.x += playerAcceleration * deltaTime;
+            m_direction.x += m_acceleration * deltaTime;
         } else {
-            if (playerDirection.x > 0.0f) {
-                playerDirection.x -= playerAcceleration * deltaTime;
-                if (playerDirection.x < 0.0f) {
-                    playerDirection.x = 0.0f;
+            if (m_direction.x > 0.0f) {
+                m_direction.x -= m_acceleration * deltaTime;
+                if (m_direction.x < 0.0f) {
+                    m_direction.x = 0.0f;
                 }
-            } else if (playerDirection.x < 0.0f) {
-                playerDirection.x += playerAcceleration * deltaTime;
-                if (playerDirection.x > 0.0f) {
-                    playerDirection.x = 0.0f;
+            } else if (m_direction.x < 0.0f) {
+                m_direction.x += m_acceleration * deltaTime;
+                if (m_direction.x > 0.0f) {
+                    m_direction.x = 0.0f;
                 }
             }
         }
 
-        if (playerDirection.x > playerMaxSpeed) {
-            playerDirection.x = playerMaxSpeed;
-        } else if (playerDirection.x < -playerMaxSpeed) {
-            playerDirection.x = -playerMaxSpeed;
+        if (m_direction.x > m_maxSpeed) {
+            m_direction.x = m_maxSpeed;
+        } else if (m_direction.x < -m_maxSpeed) {
+            m_direction.x = -m_maxSpeed;
         }
 
-        playerRectangle.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
+        m_rectangle.move(sf::Vector2f(m_direction.x * deltaTime, 0.0f));
     }
 
     void horizontalCollisionsTileGroup1() {
-        for (auto &tile : playerTileGroup1) {
-            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
-                if (playerDirection.x > 0.0f) {
-                    playerDirection.x = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
-                        playerRectangle.getPosition().y));
-                } else if (playerDirection.x < 0.0f) {
-                    playerDirection.x = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
-                        playerRectangle.getPosition().y));
+        for (auto &tile : m_tileGroup1) {
+            if (m_rectangle.getGlobalBounds().intersects(tile.m_rectangle.getGlobalBounds())) {
+                if (m_direction.x > 0.0f) {
+                    m_direction.x = 0.0f;
+                    m_rectangle.setPosition(sf::Vector2f(
+                        tile.m_rectangle.getGlobalBounds().left - m_rectangle.getSize().x,
+                        m_rectangle.getPosition().y));
+                } else if (m_direction.x < 0.0f) {
+                    m_direction.x = 0.0f;
+                    m_rectangle.setPosition(sf::Vector2f(
+                        tile.m_rectangle.getGlobalBounds().left + tile.m_rectangle.getSize().x,
+                        m_rectangle.getPosition().y));
                 }
             }
         }
     }
 
     void verticalMovement(float deltaTime) {
-        if (playerJumpBufferTimer > 0.0f && playerCoyoteTimeTimer > 0.0f) {
-            playerDirection.y = playerJumpVelocity;
-            playerCoyoteTimeTimer = 0.0f;
-            playerIsGrounded = false;
-        } else if (playerDirection.y > 0.0f && playerIsGrounded) {
-            playerIsGrounded = false;
+        if (m_jumpBufferTimer > 0.0f && m_coyoteTimeTimer > 0.0f) {
+            m_direction.y = m_jumpVelocity;
+            m_coyoteTimeTimer = 0.0f;
+            m_isGrounded = false;
+        } else if (m_direction.y > 0.0f && m_isGrounded) {
+            m_isGrounded = false;
         }
 
-        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !playerHoldingSpace) {
-            playerJumpBufferTimer = playerJumpBufferTime;
-            playerHoldingSpace = true;
+        if (sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && !m_holdingSpace) {
+            m_jumpBufferTimer = m_jumpBufferTime;
+            m_holdingSpace = true;
         } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space)) {
-            playerHoldingSpace = false;
+            m_holdingSpace = false;
         }
 
-        playerJumpBufferTimer -= deltaTime;
+        m_jumpBufferTimer -= deltaTime;
 
-        if (playerIsGrounded) {
-            playerCoyoteTimeTimer = playerCoyoteTime;
+        if (m_isGrounded) {
+            m_coyoteTimeTimer = m_coyoteTime;
         }
 
-        playerCoyoteTimeTimer -= deltaTime;
+        m_coyoteTimeTimer -= deltaTime;
 
-        if (playerDirection.y > playerMaxFallSpeed) {
-            playerDirection.y = playerMaxFallSpeed;
-        } else if (playerDirection.y > 0.0f) {
-            playerDirection.y += playerGravity * playerFallMultiplier * deltaTime;
-        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && playerDirection.y < 0.0f) {
-            playerDirection.y += playerGravity * playerJumpFallMultiplier * deltaTime;
+        if (m_direction.y > m_maxFallSpeed) {
+            m_direction.y = m_maxFallSpeed;
+        } else if (m_direction.y > 0.0f) {
+            m_direction.y += m_gravity * m_fallMultiplier * deltaTime;
+        } else if (!sf::Keyboard::isKeyPressed(sf::Keyboard::Space) && m_direction.y < 0.0f) {
+            m_direction.y += m_gravity * m_jumpFallMultiplier * deltaTime;
         } else {
-            playerDirection.y += playerGravity * deltaTime;
+            m_direction.y += m_gravity * deltaTime;
         }
 
-        playerRectangle.move(sf::Vector2f(0, playerDirection.y * deltaTime));
+        m_rectangle.move(sf::Vector2f(0, m_direction.y * deltaTime));
     }
 
     void verticalCollisionsTileGroup1() {
-        for (auto &tile : playerTileGroup1) {
-            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
-                if (playerDirection.y > 0.0f) {
-                    playerIsGrounded = true;
-                    playerDirection.y = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        playerRectangle.getPosition().x,
-                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
-                } else if (playerDirection.y < 0.0f) {
-                    playerDirection.y = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        playerRectangle.getPosition().x,
-                        tile.tileRectangle.getGlobalBounds().top + tile.tileRectangle.getSize().y));
+        for (auto &tile : m_tileGroup1) {
+            if (m_rectangle.getGlobalBounds().intersects(tile.m_rectangle.getGlobalBounds())) {
+                if (m_direction.y > 0.0f) {
+                    m_isGrounded = true;
+                    m_direction.y = 0.0f;
+                    m_rectangle.setPosition(sf::Vector2f(
+                        m_rectangle.getPosition().x,
+                        tile.m_rectangle.getGlobalBounds().top - m_rectangle.getSize().y));
+                } else if (m_direction.y < 0.0f) {
+                    m_direction.y = 0.0f;
+                    m_rectangle.setPosition(sf::Vector2f(
+                        m_rectangle.getPosition().x,
+                        tile.m_rectangle.getGlobalBounds().top + tile.m_rectangle.getSize().y));
                 }
             }
         }
     }
 
     void followCamera(float deadZone, sf::RenderWindow &window) {
-        if (playerRectangle.getPosition().x + playerRectangle.getSize().x >
+        if (m_rectangle.getPosition().x + m_rectangle.getSize().x >
             window.getView().getCenter().x + deadZone) {
             window.setView(sf::View(sf::FloatRect(
-                playerRectangle.getPosition().x + playerRectangle.getSize().x - window.getSize().x / 2.0f - deadZone,
+                m_rectangle.getPosition().x + m_rectangle.getSize().x - window.getSize().x / 2.0f - deadZone,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().x < window.getView().getCenter().x - deadZone) {
+        } else if (m_rectangle.getPosition().x < window.getView().getCenter().x - deadZone) {
             window.setView(sf::View(sf::FloatRect(
-                playerRectangle.getPosition().x - window.getSize().x / 2.0f + deadZone,
+                m_rectangle.getPosition().x - window.getSize().x / 2.0f + deadZone,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
         }
 
-        if (playerRectangle.getPosition().y + playerRectangle.getSize().y >
+        if (m_rectangle.getPosition().y + m_rectangle.getSize().y >
             window.getView().getCenter().y + deadZone) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
-                playerRectangle.getPosition().y + playerRectangle.getSize().y - window.getSize().y / 2.0f - deadZone,
+                m_rectangle.getPosition().y + m_rectangle.getSize().y - window.getSize().y / 2.0f - deadZone,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().y < window.getView().getCenter().y - deadZone) {
+        } else if (m_rectangle.getPosition().y < window.getView().getCenter().y - deadZone) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
-                playerRectangle.getPosition().y - window.getSize().y / 2.0f + deadZone,
+                m_rectangle.getPosition().y - window.getSize().y / 2.0f + deadZone,
                 window.getSize().x,
                 window.getSize().y)));
         }
     }
 
     void stationaryCamera(sf::RenderWindow &window) {
-        if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f <
+        if (m_rectangle.getPosition().x + m_rectangle.getSize().x / 2.0f <
             window.getView().getCenter().x - window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
+        } else if (m_rectangle.getPosition().x + m_rectangle.getSize().x / 2.0f >
                    window.getView().getCenter().x + window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y + window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
+        } else if (m_rectangle.getPosition().y + m_rectangle.getSize().y / 2.0f <
                    window.getView().getCenter().y - window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
+        } else if (m_rectangle.getPosition().y + m_rectangle.getSize().y / 2.0f >
                    window.getView().getCenter().y + window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
@@ -331,14 +331,14 @@ private:
     }
 
     void horizontalCamera(sf::RenderWindow &window) {
-        if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f <
+        if (m_rectangle.getPosition().y + m_rectangle.getSize().y / 2.0f <
             window.getView().getCenter().y - window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f * 3.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f >
+        } else if (m_rectangle.getPosition().y + m_rectangle.getSize().y / 2.0f >
                    window.getView().getCenter().y + window.getSize().y / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
@@ -347,7 +347,7 @@ private:
                 window.getSize().y)));
         } else {
             window.setView(sf::View(sf::FloatRect(
-                playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f - window.getSize().x / 2.0f,
+                m_rectangle.getPosition().x + m_rectangle.getSize().x / 2.0f - window.getSize().x / 2.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
@@ -355,14 +355,14 @@ private:
     }
 
     void verticalCamera(sf::RenderWindow &window) {
-        if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f <
+        if (m_rectangle.getPosition().x + m_rectangle.getSize().x / 2.0f <
             window.getView().getCenter().x - window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f * 3.0f,
                 window.getView().getCenter().y - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
-        } else if (playerRectangle.getPosition().x + playerRectangle.getSize().x / 2.0f >
+        } else if (m_rectangle.getPosition().x + m_rectangle.getSize().x / 2.0f >
                    window.getView().getCenter().x + window.getSize().x / 2.0f) {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x + window.getSize().x / 2.0f * 3.0f,
@@ -372,7 +372,7 @@ private:
         } else {
             window.setView(sf::View(sf::FloatRect(
                 window.getView().getCenter().x - window.getSize().x / 2.0f,
-                playerRectangle.getPosition().y + playerRectangle.getSize().y / 2.0f - window.getSize().y / 2.0f,
+                m_rectangle.getPosition().y + m_rectangle.getSize().y / 2.0f - window.getSize().y / 2.0f,
                 window.getSize().x,
                 window.getSize().y)));
         }
@@ -386,8 +386,8 @@ private:
 void loadLevel(std::string map,
                float &playerPositionX,
                float &playerPositionY,
-               std::vector<Tile1> &tileGroup1,
-               std::vector<Tile2> &tileGroup2) {
+               std::vector<MainTile> &tileGroup1,
+               std::vector<OneWayTile> &tileGroup2) {
     std::ifstream file(map);
     std::string line;
 
@@ -401,17 +401,17 @@ void loadLevel(std::string map,
                 x = collom_index * 36.0f;
                 y = row_index * 36.0f;
                 if (line[collom_index] == '1') { // 1 - normal tile
-                    tileGroup1.push_back(Tile1(
+                    tileGroup1.push_back(MainTile(
                         sf::Color(0.0f, 0.0f, 0.0f),
                         sf::Vector2f(36.0f, 36.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '2') { // 2 - small tile
-                    tileGroup1.push_back(Tile1(
+                    tileGroup1.push_back(MainTile(
                         sf::Color(0, 0, 0),
                         sf::Vector2f(36.0f, 9.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '3') { // 3 - one way tile
-                    tileGroup2.push_back(Tile2(
+                    tileGroup2.push_back(OneWayTile(
                         sf::Color(139.0f, 69.0f, 19.0f),
                         sf::Vector2f(36.0f, 9.0f),
                         sf::Vector2f(x, y)));
@@ -448,8 +448,8 @@ int main() {
     sf::Clock clock;
     float deltaTime;
 
-    std::vector<Tile1> tileGroup1;
-    std::vector<Tile2> tileGroup2;
+    std::vector<MainTile> tileGroup1;
+    std::vector<OneWayTile> tileGroup2;
 
     float playerPositionX;
     float playerPositionY;
