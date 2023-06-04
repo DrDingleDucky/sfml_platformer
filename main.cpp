@@ -167,19 +167,30 @@ private:
         playerRectangle.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
     }
 
+    bool onTileGroup2() {
+        for (auto &tile : playerTileGroup2) {
+            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
+                return true;
+            }
+        }
+        return false;
+    }
+
     void horizontalCollisions() {
-        for (auto &tile : playerTileGroup1) {
-            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
-                if (playerDirection.x > 0.0f) {
-                    playerDirection.x = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
-                        playerRectangle.getPosition().y));
-                } else if (playerDirection.x < 0.0f) {
-                    playerDirection.x = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
-                        playerRectangle.getPosition().y));
+        if (!onTileGroup2()) {
+            for (auto &tile : playerTileGroup1) {
+                if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
+                    if (playerDirection.x > 0.0f) {
+                        playerDirection.x = 0.0f;
+                        playerRectangle.setPosition(sf::Vector2f(
+                            tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
+                            playerRectangle.getPosition().y));
+                    } else if (playerDirection.x < 0.0f) {
+                        playerDirection.x = 0.0f;
+                        playerRectangle.setPosition(sf::Vector2f(
+                            tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
+                            playerRectangle.getPosition().y));
+                    }
                 }
             }
         }
