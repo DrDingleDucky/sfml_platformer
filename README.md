@@ -6,8 +6,6 @@
 
 ### Player
 
-add jumb buffer
-
 add apex modifiers
 
 add wall jump
