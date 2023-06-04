@@ -25,3 +25,13 @@ load and unload different levels
 ## Compile
 
 g++ main.cpp -o main -lsfml-graphics -lsfml-window -lsfml-system
+
+## Controls
+
+a - move left
+
+d - move right
+
+s - pass through floor
+
+space - jump (variable)
