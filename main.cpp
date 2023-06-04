@@ -8,8 +8,8 @@ class MainTile {
 public:
     sf::RectangleShape m_rectangle;
     MainTile(sf::Color color,
-          sf::Vector2f size,
-          sf::Vector2f position)
+             sf::Vector2f size,
+             sf::Vector2f position)
         : m_color(color),
           m_size(size),
           m_startPosition(position) {
@@ -33,8 +33,8 @@ public:
     sf::RectangleShape m_rectangle;
     sf::RectangleShape m_rectangleTop;
     OneWayTile(sf::Color color,
-          sf::Vector2f size,
-          sf::Vector2f position)
+               sf::Vector2f size,
+               sf::Vector2f position)
         : m_color(color),
           m_size(size),
           m_startPosition(position) {
