@@ -104,12 +104,13 @@ public:
         playerRectangleBottom.setPosition(sf::Vector2f(playerRectangle.getPosition().x,
                                                        playerRectangle.getPosition().y +
                                                            playerRectangle.getSize().y - 1.0f));
+        verticalCollisionTileGroup2();
 
         horizontalMovement(deltaTime);
-        horizontalCollisions();
+        horizontalCollisionsTileGroup1();
 
         verticalMovement(deltaTime);
-        verticalCollisions();
+        verticalCollisionsTileGroup1();
 
         camera(window);
     }
@@ -141,6 +142,20 @@ private:
     sf::Vector2f playerDirection;
     sf::RectangleShape playerRectangle;
     sf::RectangleShape playerRectangleBottom;
+
+    void verticalCollisionTileGroup2() {
+        for (auto &tile : playerTileGroup2) {
+            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
+                if (playerDirection.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
+                    playerIsGrounded = true;
+                    playerDirection.y = 0.0f;
+                    playerRectangle.setPosition(sf::Vector2f(
+                        playerRectangle.getPosition().x,
+                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
+                }
+            }
+        }
+    }
 
     void horizontalMovement(float deltaTime) {
         if (sf::Keyboard::isKeyPressed(sf::Keyboard::A) &&
@@ -177,30 +192,19 @@ private:
         playerRectangle.move(sf::Vector2f(playerDirection.x * deltaTime, 0.0f));
     }
 
-    bool onTileGroup2() {
-        for (auto &tile : playerTileGroup2) {
-            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
-                return true;
-            }
-        }
-        return false;
-    }
-
-    void horizontalCollisions() {
-        if (!onTileGroup2()) {
-            for (auto &tile : playerTileGroup1) {
-                if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
-                    if (playerDirection.x > 0.0f) {
-                        playerDirection.x = 0.0f;
-                        playerRectangle.setPosition(sf::Vector2f(
-                            tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
-                            playerRectangle.getPosition().y));
-                    } else if (playerDirection.x < 0.0f) {
-                        playerDirection.x = 0.0f;
-                        playerRectangle.setPosition(sf::Vector2f(
-                            tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
-                            playerRectangle.getPosition().y));
-                    }
+    void horizontalCollisionsTileGroup1() {
+        for (auto &tile : playerTileGroup1) {
+            if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
+                if (playerDirection.x > 0.0f) {
+                    playerDirection.x = 0.0f;
+                    playerRectangle.setPosition(sf::Vector2f(
+                        tile.tileRectangle.getGlobalBounds().left - playerRectangle.getSize().x,
+                        playerRectangle.getPosition().y));
+                } else if (playerDirection.x < 0.0f) {
+                    playerDirection.x = 0.0f;
+                    playerRectangle.setPosition(sf::Vector2f(
+                        tile.tileRectangle.getGlobalBounds().left + tile.tileRectangle.getSize().x,
+                        playerRectangle.getPosition().y));
                 }
             }
         }
@@ -243,7 +247,7 @@ private:
         playerRectangle.move(sf::Vector2f(0, playerDirection.y * deltaTime));
     }
 
-    void verticalCollisions() {
+    void verticalCollisionsTileGroup1() {
         for (auto &tile : playerTileGroup1) {
             if (playerRectangle.getGlobalBounds().intersects(tile.tileRectangle.getGlobalBounds())) {
                 if (playerDirection.y > 0.0f) {
@@ -257,18 +261,6 @@ private:
                     playerRectangle.setPosition(sf::Vector2f(
                         playerRectangle.getPosition().x,
                         tile.tileRectangle.getGlobalBounds().top + tile.tileRectangle.getSize().y));
-                }
-            }
-        }
-
-        for (auto &tile : playerTileGroup2) {
-            if (playerRectangleBottom.getGlobalBounds().intersects(tile.tileRectangleTop.getGlobalBounds())) {
-                if (playerDirection.y > 0.0f && !sf::Keyboard::isKeyPressed(sf::Keyboard::S)) {
-                    playerIsGrounded = true;
-                    playerDirection.y = 0.0f;
-                    playerRectangle.setPosition(sf::Vector2f(
-                        playerRectangle.getPosition().x,
-                        tile.tileRectangle.getGlobalBounds().top - playerRectangle.getSize().y));
                 }
             }
         }
