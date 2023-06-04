@@ -374,7 +374,7 @@ void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, 
                 y = row_index * 36.0f;
                 if (line[collom_index] == '1') { // 1 - normal tile
                     tileGroup1.push_back(Tile1(
-                        sf::Color(0, 0, 0),
+                        sf::Color(0.0f, 0.0f, 0.0f),
                         sf::Vector2f(36.0f, 36.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '2') { // 2 - small tile
@@ -384,7 +384,7 @@ void loadLevel(std::string map, float &playerPositionX, float &playerPositionY, 
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == '3') { // 3 - one way tile
                     tileGroup2.push_back(Tile2(
-                        sf::Color(139,69,19),
+                        sf::Color(139.0f, 69.0f, 19.0f),
                         sf::Vector2f(36.0f, 9.0f),
                         sf::Vector2f(x, y)));
                 } else if (line[collom_index] == 'p') { // p - player
