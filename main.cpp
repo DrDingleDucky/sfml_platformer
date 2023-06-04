@@ -484,7 +484,7 @@ int main() {
 
         player.update(window, deltaTime);
 
-        window.clear(sf::Color(64, 64, 64, 255));
+        window.clear(sf::Color(64, 64, 64));
 
         for (auto &tile : tileGroup1) {
             tile.draw(window);
