@@ -37,9 +37,10 @@ class OneWayTile
 public:
     sf::RectangleShape rect;
     sf::RectangleShape rectTop;
-    OneWayTile(sf::Color color,
-               sf::Vector2f size,
-               sf::Vector2f pos)
+    OneWayTile(
+        sf::Color color,
+        sf::Vector2f size,
+        sf::Vector2f pos)
     {
         this->color = color;
         this->pos = pos;
@@ -67,18 +68,19 @@ private:
 class Player
 {
 public:
-    Player(float acceleration,
-           float maxSpeed,
-           float gravity,
-           float jumpVelocity,
-           float fallMultiplier,
-           float jumpFallMultiplier,
-           float maxFallSpeed,
-           float coyoteTime,
-           float jumpBufferTime,
-           sf::Color color,
-           sf::Vector2f size,
-           sf::Vector2f pos)
+    Player(
+        float acceleration,
+        float maxSpeed,
+        float gravity,
+        float jumpVelocity,
+        float fallMultiplier,
+        float jumpFallMultiplier,
+        float maxFallSpeed,
+        float coyoteTime,
+        float jumpBufferTime,
+        sf::Color color,
+        sf::Vector2f size,
+        sf::Vector2f pos)
     {
         this->acceleration = acceleration;
         this->maxSpeed = maxSpeed;
@@ -106,10 +108,11 @@ public:
             rect.getPosition().y + rect.getSize().y - 1.0f));
     }
 
-    void update(sf::RenderWindow &window,
-                float deltaTime,
-                std::vector<SolidTile> &solidTileGroup,
-                std::vector<OneWayTile> &oneWayTileGroup)
+    void update(
+        sf::RenderWindow &window,
+        float deltaTime,
+        std::vector<SolidTile> &solidTileGroup,
+        std::vector<OneWayTile> &oneWayTileGroup)
     {
         rectBottom.setPosition(sf::Vector2f(
             rect.getPosition().x,
