@@ -118,11 +118,11 @@ public:
             rect.getPosition().x,
             rect.getPosition().y + rect.getSize().y - 1.0f));
 
+        CollisionOneWayTile(oneWayTileGroup);
         horizontalMovement(deltaTime);
         horizontalCollisionsSolidTile(solidTileGroup);
         verticalMovement(deltaTime);
         verticalCollisionsSolidTile(solidTileGroup);
-        collisionOneWayTile(oneWayTileGroup);
         camera(window);
     }
 
@@ -151,6 +151,27 @@ private:
     sf::Vector2f direction;
     sf::RectangleShape rect;
     sf::RectangleShape rectBottom;
+
+    void CollisionOneWayTile(
+        std::vector<OneWayTile> &oneWayTileGroup)
+    {
+        for (auto &tile : oneWayTileGroup)
+        {
+            if (rectBottom.getGlobalBounds().intersects(tile.rectTop.getGlobalBounds()))
+            {
+                if (direction.y > 0.0f &&
+                    !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
+                {
+                    isGrounded = true;
+                    direction.y = 0.0f;
+                    rect.setPosition(sf::Vector2f(
+                        rect.getPosition().x,
+                        tile.rect.getGlobalBounds().top -
+                            rect.getSize().y));
+                }
+            }
+        }
+    }
 
     void horizontalMovement(float deltaTime)
     {
@@ -310,26 +331,6 @@ private:
                         rect.getPosition().x,
                         tile.rect.getGlobalBounds().top +
                             tile.rect.getSize().y));
-                }
-            }
-        }
-    }
-
-    void collisionOneWayTile(std::vector<OneWayTile> &oneWayTileGroup)
-    {
-        for (auto &tile : oneWayTileGroup)
-        {
-            if (rectBottom.getGlobalBounds().intersects(tile.rectTop.getGlobalBounds()))
-            {
-                if (direction.y > 0.0f &&
-                    !sf::Keyboard::isKeyPressed(sf::Keyboard::S))
-                {
-                    isGrounded = true;
-                    direction.y = 0.0f;
-                    rect.setPosition(sf::Vector2f(
-                        rect.getPosition().x,
-                        tile.rect.getGlobalBounds().top -
-                            rect.getSize().y));
                 }
             }
         }
