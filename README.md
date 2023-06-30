@@ -1,6 +1,6 @@
 # SFML Platformer
 
-2d platformer in SFML.
+2D platformer movement in SFML.
 
 ## Compile
 
